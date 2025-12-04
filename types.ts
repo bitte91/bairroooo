@@ -37,10 +37,39 @@ export interface Message {
 
 export interface User {
   name: string;
+  points?: number;
+  badges?: Badge[];
 }
 
 export interface ToastNotification {
   id: number;
   message: string;
   type: 'success' | 'error';
+}
+
+export interface Favorite {
+  id: string;
+  userId: string;
+  itemId: string;
+  itemType: 'post' | 'alert' | 'event';
+  title: string;
+  createdAt: string;
+  notes?: string;
+}
+
+export interface Badge {
+  id: string;
+  name: string;
+  icon: string;
+  description: string;
+  unlockedAt?: string;
+}
+
+export interface Event {
+    id: number;
+    title: string;
+    description: string;
+    date: string;
+    location: string;
+    category: 'community' | 'religious' | 'market' | 'other';
 }

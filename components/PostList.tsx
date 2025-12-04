@@ -1,130 +1,121 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { Post, PostType } from '../types';
-import { Store, User, Tag, Search } from 'lucide-react';
+import React, { useState } from 'react';
+import { Post, Favorite } from '../types';
+import { MapPin, Phone, Star } from 'lucide-react';
+import { useApp } from '../contexts/AppContext';
+import { getUserBadges } from '../utils/badgeSystem';
 
 interface PostListProps {
   posts: Post[];
 }
 
 export const PostList: React.FC<PostListProps> = ({ posts }) => {
-  const [filter, setFilter] = useState<PostType | 'all'>('all');
-  const [isVisible, setIsVisible] = useState(false);
-  const containerRef = useRef<HTMLDivElement>(null);
+  const { addFavorite, removeFavorite, isFavorite, currentUser, loginUser } = useApp();
+  const [filter, setFilter] = useState<'todos' | 'comercio' | 'autonomo' | 'promocao'>('todos');
 
-  const filteredPosts = filter === 'all' 
+  const filteredPosts = filter === 'todos'
     ? posts 
     : posts.filter(post => post.type === filter);
 
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setIsVisible(true);
-          observer.disconnect(); 
-        }
-      },
-      { threshold: 0.1, rootMargin: '50px' }
-    );
-
-    if (containerRef.current) {
-      observer.observe(containerRef.current);
-    }
-
-    return () => observer.disconnect();
-  }, []);
-
-  const getBadgeStyle = (type: PostType) => {
-    switch(type) {
-      case 'comercio': return 'bg-blue-100 text-blue-700 dark:bg-blue-900/40 dark:text-blue-300 border border-blue-200 dark:border-blue-800';
-      case 'autonomo': return 'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/40 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800';
-      case 'promocao': return 'bg-orange-100 text-orange-700 dark:bg-orange-900/40 dark:text-orange-300 border border-orange-200 dark:border-orange-800';
-      default: return 'bg-gray-100 text-gray-700';
-    }
+  const toggleFavorite = (post: Post) => {
+      if (!currentUser) {
+          // Trigger login if needed, or handle in UI
+          return;
+      }
+      const id = post.id.toString();
+      if (isFavorite(id)) {
+          removeFavorite(id);
+      } else {
+          const newFav: Favorite = {
+              id: Date.now().toString(),
+              userId: currentUser,
+              itemId: id,
+              itemType: 'post',
+              title: post.title,
+              createdAt: new Date().toISOString()
+          };
+          addFavorite(newFav);
+      }
   };
-
-  const getBadgeLabel = (type: PostType) => {
-    switch(type) {
-      case 'comercio': return 'Comércio';
-      case 'autonomo': return 'Autônomo';
-      case 'promocao': return 'Oferta';
-      default: return type;
-    }
-  };
-
-  const getIcon = (type: PostType) => {
-     switch(type) {
-      case 'comercio': return <Store size={14} />;
-      case 'autonomo': return <User size={14} />;
-      case 'promocao': return <Tag size={14} />;
-      default: return <Store size={14} />;
-    }
-  };
-
-  const filters: { id: PostType | 'all', label: string }[] = [
-    { id: 'all', label: 'Todos' },
-    { id: 'comercio', label: 'Comércio' },
-    { id: 'autonomo', label: 'Autônomos' },
-    { id: 'promocao', label: 'Promoções' },
-  ];
 
   return (
-    <section className="mb-16" ref={containerRef}>
-      <div className="flex flex-col md:flex-row justify-between items-center mb-8 gap-4">
-        <h2 className="text-2xl md:text-3xl font-heading font-bold text-gray-800 dark:text-white">Anúncios Recentes</h2>
-        <div className="flex flex-wrap gap-2">
-          {filters.map((f) => (
+    <section className="mb-16">
+      <div className="flex flex-col md:flex-row justify-between items-end md:items-center mb-8 gap-4">
+        <div>
+          <h2 className="text-2xl md:text-3xl font-heading font-bold text-gray-800 dark:text-white mb-2">
+            Comércio & Serviços
+          </h2>
+          <p className="text-gray-500 dark:text-gray-400">Apoie quem faz a diferença no nosso bairro.</p>
+        </div>
+
+        <div className="flex gap-2 p-1 bg-white dark:bg-slate-800 rounded-lg border border-gray-100 dark:border-slate-700 shadow-sm overflow-x-auto max-w-full">
+          {['todos', 'comercio', 'autonomo', 'promocao'].map((f) => (
             <button
-              key={f.id}
-              onClick={() => setFilter(f.id)}
-              className={`px-4 py-2 rounded-full text-sm font-medium transition-colors border ${
-                filter === f.id 
-                  ? 'bg-primary text-white border-primary dark:bg-primary-dark dark:border-primary-dark shadow-md' 
-                  : 'bg-white dark:bg-dark-surface text-gray-600 dark:text-gray-300 border-gray-200 dark:border-dark-border hover:border-primary hover:text-primary dark:hover:text-primary-light'
+              key={f}
+              onClick={() => setFilter(f as any)}
+              className={`px-4 py-2 rounded-md text-sm font-bold transition-all capitalize whitespace-nowrap ${
+                filter === f
+                  ? 'bg-primary dark:bg-primary-dark text-white shadow-sm'
+                  : 'text-gray-500 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-slate-700'
               }`}
             >
-              {f.label}
+              {f === 'todos' ? 'Todos' : f}
             </button>
           ))}
         </div>
       </div>
 
-      {filteredPosts.length === 0 ? (
-        <div className="text-center py-16 text-gray-400 bg-white dark:bg-dark-surface rounded-3xl border border-gray-100 dark:border-dark-border">
-            <Search size={48} className="mx-auto mb-4 opacity-50" />
-            <p className="text-lg">Nenhum anúncio encontrado nesta categoria.</p>
-        </div>
-      ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {filteredPosts.map((post, index) => (
-            <div 
-              key={post.id}
-              className={`group bg-white dark:bg-dark-surface rounded-2xl border border-gray-100 dark:border-dark-border shadow-sm hover:shadow-xl hover:-translate-y-1 hover:border-primary/30 dark:hover:border-primary-light/30 transition-all duration-700 ease-out overflow-hidden flex flex-col ${
-                isVisible 
-                  ? 'opacity-100 translate-y-0' 
-                  : 'opacity-0 translate-y-8'
-              }`}
-              style={{ transitionDelay: `${index * 100}ms` }}
-            >
-              <div className="p-4 flex justify-between items-center border-b border-gray-50 dark:border-dark-border bg-gray-50/50 dark:bg-slate-900/20">
-                <div className="flex items-center gap-3">
-                  <div className="w-9 h-9 rounded-full bg-primary/10 dark:bg-primary/20 flex items-center justify-center text-primary dark:text-primary-light text-xs font-bold border border-primary/10">
-                    {post.author.substring(0, 2).toUpperCase()}
-                  </div>
-                  <span className="text-sm font-semibold text-gray-700 dark:text-gray-300 group-hover:text-primary dark:group-hover:text-primary-light transition-colors">{post.author}</span>
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {filteredPosts.map((post) => {
+            const isFav = isFavorite(post.id.toString());
+            return (
+          <div key={post.id} className="group bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-700 p-6 transition-all hover:shadow-md hover:-translate-y-1 relative overflow-hidden">
+            <div className={`absolute top-0 right-0 px-3 py-1 rounded-bl-xl text-xs font-bold uppercase tracking-wider ${
+              post.type === 'promocao' ? 'bg-rose-100 dark:bg-rose-900/30 text-rose-600 dark:text-rose-400' :
+              post.type === 'autonomo' ? 'bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400' :
+              'bg-emerald-100 dark:bg-emerald-900/30 text-emerald-600 dark:text-emerald-400'
+            }`}>
+              {post.type}
+            </div>
+
+            <h3 className="font-heading font-bold text-xl text-gray-800 dark:text-white mb-2 pr-8">{post.title}</h3>
+            <p className="text-gray-500 dark:text-gray-400 text-sm mb-6 line-clamp-3 leading-relaxed">{post.desc}</p>
+
+            <div className="flex items-center justify-between pt-4 border-t border-gray-50 dark:border-slate-700/50">
+              <div className="flex items-center gap-2">
+                <div className="w-8 h-8 rounded-full bg-gray-200 dark:bg-slate-700 flex items-center justify-center text-xs font-bold text-gray-500 dark:text-gray-300">
+                  {post.author.charAt(0)}
                 </div>
-                <span className={`text-xs font-bold px-3 py-1.5 rounded-full uppercase tracking-wide flex items-center gap-1.5 ${getBadgeStyle(post.type)}`}>
-                  {getIcon(post.type)}
-                  {getBadgeLabel(post.type)}
-                </span>
+                <div className="flex flex-col">
+                    <div className="flex items-center gap-1">
+                        <span className="text-xs font-medium text-gray-500 dark:text-gray-400">Por {post.author}</span>
+                        <div className="flex">
+                            {getUserBadges(post.author).map(b => (
+                                <span key={b.id} title={b.name} className="text-[10px] cursor-help">{b.icon}</span>
+                            ))}
+                        </div>
+                    </div>
+                </div>
               </div>
-              <div className="p-6 flex-1">
-                <h3 className="text-xl font-heading font-bold text-gray-800 dark:text-gray-100 mb-3 group-hover:text-primary dark:group-hover:text-primary-light transition-colors">{post.title}</h3>
-                <p className="text-gray-500 dark:text-gray-400 text-sm leading-relaxed">{post.desc}</p>
+
+              <div className="flex gap-2">
+                 <button
+                    onClick={() => toggleFavorite(post)}
+                    className={`p-2 rounded-lg transition-colors ${isFav ? 'text-amber-400 bg-amber-50 dark:bg-amber-900/20' : 'text-gray-400 hover:text-amber-400 hover:bg-amber-50 dark:hover:bg-slate-700'}`}
+                    title="Salvar"
+                 >
+                     <Star size={18} fill={isFav ? "currentColor" : "none"} />
+                 </button>
+                 <button className="p-2 text-primary dark:text-primary-light hover:bg-primary/5 dark:hover:bg-primary/10 rounded-lg transition-colors" title="Ver Localização">
+                    <MapPin size={18} />
+                </button>
+                <button className="p-2 text-primary dark:text-primary-light hover:bg-primary/5 dark:hover:bg-primary/10 rounded-lg transition-colors" title="Contatar">
+                    <Phone size={18} />
+                </button>
               </div>
             </div>
-          ))}
-        </div>
-      )}
+          </div>
+        )})}
+      </div>
     </section>
   );
 };

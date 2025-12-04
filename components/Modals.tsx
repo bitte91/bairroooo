@@ -1,6 +1,9 @@
 import React, { useState } from 'react';
 import { PostType, AlertType } from '../types';
 import { X, Store, HeartHandshake, AlertTriangle, PawPrint, Camera } from 'lucide-react';
+import { useForm } from 'react-hook-form';
+import { z } from 'zod';
+import { zodResolver } from '@hookform/resolvers/zod';
 
 /* --- Shared Modal Shell --- */
 interface ModalProps {
@@ -79,6 +82,22 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onLogin, onClose }) => {
   );
 };
 
+/* --- Zod Schemas --- */
+const postSchema = z.object({
+  title: z.string().min(5, 'O título deve ter pelo menos 5 caracteres').max(50),
+  description: z.string().min(10, 'A descrição deve ter pelo menos 10 caracteres').max(200),
+  category: z.enum(['comercio', 'autonomo', 'promocao'])
+});
+
+const alertSchema = z.object({
+  title: z.string().min(5, 'O título deve ter pelo menos 5 caracteres').max(50),
+  description: z.string().min(10, 'A descrição deve ter pelo menos 10 caracteres').max(200),
+  type: z.enum(['ajuda', 'pet', 'seguranca'])
+});
+
+type PostFormData = z.infer<typeof postSchema>;
+type AlertFormData = z.infer<typeof alertSchema>;
+
 /* --- Create Post/Alert Modal --- */
 interface CreatePostModalProps {
   onClose: () => void;
@@ -96,32 +115,30 @@ export const CreatePostModal: React.FC<CreatePostModalProps> = ({
   initialAlertType = 'ajuda'
 }) => {
   const [mode, setMode] = useState<'post' | 'alert'>(initialMode);
-  
-  // Post States
-  const [postTitle, setPostTitle] = useState('');
-  const [postDesc, setPostDesc] = useState('');
-  const [postType, setPostType] = useState<PostType>('comercio');
-
-  // Alert States
-  const [alertTitle, setAlertTitle] = useState('');
-  const [alertDesc, setAlertDesc] = useState('');
-  const [alertType, setAlertType] = useState<AlertType>(initialAlertType);
   const [hasImage, setHasImage] = useState(false);
+  
+  // React Hook Form
+  const { register: registerPost, handleSubmit: handleSubmitPost, formState: { errors: errorsPost }, reset: resetPost } = useForm<PostFormData>({
+      resolver: zodResolver(postSchema),
+      defaultValues: { category: 'comercio' }
+  });
 
-  const handleSubmit = () => {
-    if (mode === 'post') {
-        if (!postTitle.trim() || !postDesc.trim()) return;
-        onSubmitPost(postTitle.trim(), postDesc.trim(), postType);
-    } else {
-        if (!alertTitle.trim() || !alertDesc.trim()) return;
-        const mockImage = hasImage ? "https://images.unsplash.com/photo-1543466835-00a7907e9de1?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" : undefined;
-        onSubmitAlert(alertTitle.trim(), alertDesc.trim(), alertType, mockImage);
-    }
+  const { register: registerAlert, handleSubmit: handleSubmitAlert, formState: { errors: errorsAlert }, setValue: setAlertValue, watch: watchAlert } = useForm<AlertFormData>({
+      resolver: zodResolver(alertSchema),
+      defaultValues: { type: initialAlertType }
+  });
+
+  const alertType = watchAlert('type');
+
+  const onPostSubmit = (data: PostFormData) => {
+      onSubmitPost(data.title, data.description, data.category as PostType);
+      resetPost();
   };
 
-  const isValid = mode === 'post' 
-    ? (postTitle.trim() && postDesc.trim()) 
-    : (alertTitle.trim() && alertDesc.trim());
+  const onAlertSubmit = (data: AlertFormData) => {
+      const mockImage = hasImage ? "https://images.unsplash.com/photo-1543466835-00a7907e9de1?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" : undefined;
+      onSubmitAlert(data.title, data.description, data.type as AlertType, mockImage);
+  };
 
   return (
     <Modal 
@@ -147,12 +164,11 @@ export const CreatePostModal: React.FC<CreatePostModalProps> = ({
 
       <div className="space-y-5 animate-fadeIn">
         {mode === 'post' ? (
-            <>
+            <form id="postForm" onSubmit={handleSubmitPost(onPostSubmit)} className="space-y-5">
                 <div>
                 <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Categoria</label>
                 <select 
-                    value={postType}
-                    onChange={(e) => setPostType(e.target.value as PostType)}
+                    {...registerPost('category')}
                     className="w-full px-5 py-4 bg-gray-100 dark:bg-slate-800 rounded-xl border-2 border-transparent focus:bg-white dark:focus:bg-slate-900 focus:border-primary dark:focus:border-primary-light outline-none transition-all appearance-none cursor-pointer text-gray-800 dark:text-white"
                 >
                     <option value="comercio">Comércio Local</option>
@@ -165,49 +181,46 @@ export const CreatePostModal: React.FC<CreatePostModalProps> = ({
                 <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Título do Anúncio</label>
                 <input 
                     type="text" 
-                    value={postTitle}
-                    onChange={(e) => setPostTitle(e.target.value)}
+                    {...registerPost('title')}
                     placeholder="Ex: Vendo Bolos Caseiros"
-                    maxLength={50}
-                    className="w-full px-5 py-4 bg-gray-100 dark:bg-slate-800 rounded-xl border-2 border-transparent focus:bg-white dark:focus:bg-slate-900 focus:border-primary dark:focus:border-primary-light outline-none transition-all text-gray-800 dark:text-white"
+                    className={`w-full px-5 py-4 bg-gray-100 dark:bg-slate-800 rounded-xl border-2 focus:bg-white dark:focus:bg-slate-900 outline-none transition-all text-gray-800 dark:text-white ${errorsPost.title ? 'border-red-500' : 'border-transparent focus:border-primary dark:focus:border-primary-light'}`}
                 />
+                {errorsPost.title && <p className="text-red-500 text-xs mt-1">{errorsPost.title.message}</p>}
                 </div>
 
                 <div>
                 <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Descrição</label>
                 <textarea 
-                    value={postDesc}
-                    onChange={(e) => setPostDesc(e.target.value)}
+                    {...registerPost('description')}
                     placeholder="Detalhes do serviço ou produto..."
                     rows={3}
-                    maxLength={140}
-                    className="w-full px-5 py-4 bg-gray-100 dark:bg-slate-800 rounded-xl border-2 border-transparent focus:bg-white dark:focus:bg-slate-900 focus:border-primary dark:focus:border-primary-light outline-none transition-all resize-none text-gray-800 dark:text-white"
+                    className={`w-full px-5 py-4 bg-gray-100 dark:bg-slate-800 rounded-xl border-2 focus:bg-white dark:focus:bg-slate-900 outline-none transition-all resize-none text-gray-800 dark:text-white ${errorsPost.description ? 'border-red-500' : 'border-transparent focus:border-primary dark:focus:border-primary-light'}`}
                 />
+                {errorsPost.description && <p className="text-red-500 text-xs mt-1">{errorsPost.description.message}</p>}
                 </div>
-            </>
+            </form>
         ) : (
-            <>
+            <form id="alertForm" onSubmit={handleSubmitAlert(onAlertSubmit)} className="space-y-5">
                  <div>
                     <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Tipo de Alerta</label>
                     <div className="grid grid-cols-3 gap-3">
-                        <button 
-                            className={`p-3 rounded-xl border-2 flex flex-col items-center gap-1.5 text-xs font-bold transition-all ${alertType === 'ajuda' ? 'border-amber-400 bg-amber-50 dark:bg-amber-900/20 text-amber-700 dark:text-amber-400' : 'border-transparent bg-gray-100 dark:bg-slate-800 text-gray-500 dark:text-gray-400'}`}
-                            onClick={() => setAlertType('ajuda')}
-                        >
-                            <HeartHandshake size={24} /> Pedido de Ajuda
-                        </button>
-                        <button 
-                            className={`p-3 rounded-xl border-2 flex flex-col items-center gap-1.5 text-xs font-bold transition-all ${alertType === 'pet' ? 'border-rose-400 bg-rose-50 dark:bg-rose-900/20 text-rose-700 dark:text-rose-400' : 'border-transparent bg-gray-100 dark:bg-slate-800 text-gray-500 dark:text-gray-400'}`}
-                            onClick={() => setAlertType('pet')}
-                        >
-                            <PawPrint size={24} /> Pet Perdido
-                        </button>
-                        <button 
-                            className={`p-3 rounded-xl border-2 flex flex-col items-center gap-1.5 text-xs font-bold transition-all ${alertType === 'seguranca' ? 'border-red-400 bg-red-50 dark:bg-red-900/20 text-red-700 dark:text-red-400' : 'border-transparent bg-gray-100 dark:bg-slate-800 text-gray-500 dark:text-gray-400'}`}
-                            onClick={() => setAlertType('seguranca')}
-                        >
-                            <AlertTriangle size={24} /> Segurança
-                        </button>
+                        {['ajuda', 'pet', 'seguranca'].map((t) => (
+                            <button
+                                key={t}
+                                type="button"
+                                className={`p-3 rounded-xl border-2 flex flex-col items-center gap-1.5 text-xs font-bold transition-all capitalize ${alertType === t
+                                    ? (t === 'ajuda' ? 'border-amber-400 bg-amber-50 dark:bg-amber-900/20 text-amber-700 dark:text-amber-400'
+                                      : t === 'pet' ? 'border-rose-400 bg-rose-50 dark:bg-rose-900/20 text-rose-700 dark:text-rose-400'
+                                      : 'border-red-400 bg-red-50 dark:bg-red-900/20 text-red-700 dark:text-red-400')
+                                    : 'border-transparent bg-gray-100 dark:bg-slate-800 text-gray-500 dark:text-gray-400'}`}
+                                onClick={() => setAlertValue('type', t as any)}
+                            >
+                                {t === 'ajuda' && <HeartHandshake size={24} />}
+                                {t === 'pet' && <PawPrint size={24} />}
+                                {t === 'seguranca' && <AlertTriangle size={24} />}
+                                {t === 'seguranca' ? 'Segurança' : t === 'pet' ? 'Pet Perdido' : 'Pedido de Ajuda'}
+                            </button>
+                        ))}
                     </div>
                 </div>
 
@@ -215,12 +228,11 @@ export const CreatePostModal: React.FC<CreatePostModalProps> = ({
                 <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Título do Alerta</label>
                 <input 
                     type="text" 
-                    value={alertTitle}
-                    onChange={(e) => setAlertTitle(e.target.value)}
+                    {...registerAlert('title')}
                     placeholder={alertType === 'pet' ? "Ex: Cachorro perdido no centro" : "Ex: Preciso de ajuda para..."}
-                    maxLength={50}
-                    className="w-full px-5 py-4 bg-gray-100 dark:bg-slate-800 rounded-xl border-2 border-transparent focus:bg-white dark:focus:bg-slate-900 focus:border-primary dark:focus:border-primary-light outline-none transition-all text-gray-800 dark:text-white"
+                    className={`w-full px-5 py-4 bg-gray-100 dark:bg-slate-800 rounded-xl border-2 focus:bg-white dark:focus:bg-slate-900 outline-none transition-all text-gray-800 dark:text-white ${errorsAlert.title ? 'border-red-500' : 'border-transparent focus:border-primary dark:focus:border-primary-light'}`}
                 />
+                {errorsAlert.title && <p className="text-red-500 text-xs mt-1">{errorsAlert.title.message}</p>}
                 </div>
 
                 {alertType === 'pet' && (
@@ -233,6 +245,7 @@ export const CreatePostModal: React.FC<CreatePostModalProps> = ({
                             <p className="text-xs text-gray-400">Ajuda a identificar o animal</p>
                         </div>
                         <button 
+                            type="button"
                             onClick={() => setHasImage(!hasImage)}
                             className={`text-xs font-bold px-4 py-2 rounded-full transition-colors ${hasImage ? 'bg-red-100 dark:bg-red-900/30 text-red-600 dark:text-red-400' : 'bg-primary dark:bg-primary-dark text-white'}`}
                         >
@@ -244,15 +257,14 @@ export const CreatePostModal: React.FC<CreatePostModalProps> = ({
                 <div>
                 <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Detalhes</label>
                 <textarea 
-                    value={alertDesc}
-                    onChange={(e) => setAlertDesc(e.target.value)}
+                    {...registerAlert('description')}
                     placeholder="Descreva a situação, local e como entrar em contato..."
                     rows={3}
-                    maxLength={200}
-                    className="w-full px-5 py-4 bg-gray-100 dark:bg-slate-800 rounded-xl border-2 border-transparent focus:bg-white dark:focus:bg-slate-900 focus:border-primary dark:focus:border-primary-light outline-none transition-all resize-none text-gray-800 dark:text-white"
+                    className={`w-full px-5 py-4 bg-gray-100 dark:bg-slate-800 rounded-xl border-2 focus:bg-white dark:focus:bg-slate-900 outline-none transition-all resize-none text-gray-800 dark:text-white ${errorsAlert.description ? 'border-red-500' : 'border-transparent focus:border-primary dark:focus:border-primary-light'}`}
                 />
+                {errorsAlert.description && <p className="text-red-500 text-xs mt-1">{errorsAlert.description.message}</p>}
                 </div>
-            </>
+            </form>
         )}
 
         <div className="flex gap-4 pt-6 border-t border-gray-100 dark:border-slate-800">
@@ -263,9 +275,9 @@ export const CreatePostModal: React.FC<CreatePostModalProps> = ({
             Cancelar
           </button>
           <button 
-            onClick={handleSubmit}
-            className={`flex-1 py-3.5 rounded-xl font-bold shadow-lg transition-all disabled:opacity-50 ${mode === 'post' ? 'bg-primary dark:bg-primary-dark hover:bg-primary-light text-white' : 'bg-rose-500 dark:bg-rose-600 hover:bg-rose-600 text-white'}`}
-            disabled={!isValid}
+            form={mode === 'post' ? 'postForm' : 'alertForm'}
+            type="submit"
+            className={`flex-1 py-3.5 rounded-xl font-bold shadow-lg transition-all ${mode === 'post' ? 'bg-primary dark:bg-primary-dark hover:bg-primary-light text-white' : 'bg-rose-500 dark:bg-rose-600 hover:bg-rose-600 text-white'}`}
           >
             {mode === 'post' ? 'Publicar Anúncio' : 'Publicar Alerta'}
           </button>

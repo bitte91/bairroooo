@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import { User, Post, Alert, Message, ToastNotification, PostType, AlertType, Favorite } from '../types';
+import { User, Post, Alert, Message, ToastNotification, PostType, AlertType, Favorite, Notification } from '../types';
 
 interface AppContextType {
   currentUser: string | null;
@@ -27,6 +27,10 @@ interface AppContextType {
   addToast: (message: string, type: 'success' | 'error') => void;
   removeToast: (id: number) => void;
 
+  notifications: Notification[];
+  markAsRead: (id: number) => void;
+  clearNotifications: () => void;
+
   // Features
   badges: string[]; // Mock badges for now
 
@@ -37,12 +41,15 @@ interface AppContextType {
 
 const AppContext = createContext<AppContextType | undefined>(undefined);
 
-// Initial Data
+// Initial Data with Coordinates (Mocking a neighborhood in São Paulo roughly)
+const CENTER_LAT = -23.5505;
+const CENTER_LNG = -46.6333;
+
 const INITIAL_POSTS: Post[] = [
-  { id: 1, title: "Eletricista Residencial", desc: "Instalação de tomadas, chuveiros e reparos. Orçamento grátis.", author: "Carlos Ruiz", type: "autonomo" },
-  { id: 2, title: "Pães Artesanais - 20% OFF", desc: "Toda a linha de fermentação natural com desconto hoje.", author: "Padaria do Zé", type: "promocao" },
-  { id: 3, title: "Mercadinho da Esquina", desc: "Entregas gratuitas para compras acima de R$50 no bairro.", author: "Mercadinho Bom Dia", type: "comercio" },
-  { id: 4, title: "Aulas de Inglês", desc: "Aulas particulares para crianças e adolescentes. Primeira aula grátis.", author: "Ana Lima", type: "autonomo" }
+  { id: 1, title: "Eletricista Residencial", desc: "Instalação de tomadas, chuveiros e reparos. Orçamento grátis.", author: "Carlos Ruiz", type: "autonomo", latitude: -23.5510, longitude: -46.6340 },
+  { id: 2, title: "Pães Artesanais - 20% OFF", desc: "Toda a linha de fermentação natural com desconto hoje.", author: "Padaria do Zé", type: "promocao", latitude: -23.5520, longitude: -46.6320 },
+  { id: 3, title: "Mercadinho da Esquina", desc: "Entregas gratuitas para compras acima de R$50 no bairro.", author: "Mercadinho Bom Dia", type: "comercio", latitude: -23.5490, longitude: -46.6350 },
+  { id: 4, title: "Aulas de Inglês", desc: "Aulas particulares para crianças e adolescentes. Primeira aula grátis.", author: "Ana Lima", type: "autonomo", latitude: -23.5500, longitude: -46.6310 }
 ];
 
 const INITIAL_ALERTS: Alert[] = [
@@ -64,6 +71,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   const [messages, setMessages] = useState<Message[]>(INITIAL_MESSAGES);
   const [favorites, setFavorites] = useState<Favorite[]>([]);
   const [toasts, setToasts] = useState<ToastNotification[]>([]);
+  const [notifications, setNotifications] = useState<Notification[]>([]);
   const [badges, setBadges] = useState<string[]>([]);
   const [currentView, setCurrentView] = useState<'home' | 'saved' | 'profile' | 'events' | 'services'>('home');
 
@@ -155,6 +163,34 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     setToasts(prev => prev.filter(t => t.id !== id));
   };
 
+  // Mock Notifications System
+  useEffect(() => {
+    // Simulate receiving a notification after 10 seconds if logged in
+    const timer = setTimeout(() => {
+      if (currentUser) {
+        const newNotif: Notification = {
+          id: Date.now(),
+          title: "Novo Evento Próximo",
+          message: "A 'Feira de Trocas' começa em 1 hora na Praça Central.",
+          timestamp: "Agora",
+          read: false,
+          type: "system"
+        };
+        setNotifications(prev => [newNotif, ...prev]);
+        addToast("Você tem uma nova notificação!", "success");
+      }
+    }, 10000);
+    return () => clearTimeout(timer);
+  }, [currentUser]);
+
+  const markAsRead = (id: number) => {
+      setNotifications(prev => prev.map(n => n.id === id ? { ...n, read: true } : n));
+  };
+
+  const clearNotifications = () => {
+      setNotifications([]);
+  };
+
   return (
     <AppContext.Provider
       value={{
@@ -176,6 +212,9 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         toasts,
         addToast,
         removeToast,
+        notifications,
+        markAsRead,
+        clearNotifications,
         badges,
         currentView,
         setCurrentView

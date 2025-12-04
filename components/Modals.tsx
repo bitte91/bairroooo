@@ -115,8 +115,16 @@ export const CreatePostModal: React.FC<CreatePostModalProps> = ({
   initialAlertType = 'ajuda'
 }) => {
   const [mode, setMode] = useState<'post' | 'alert'>(initialMode);
-  const [hasImage, setHasImage] = useState(false);
+  const [imagePreview, setImagePreview] = useState<string | null>(null);
   
+  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+      if (e.target.files && e.target.files[0]) {
+          const file = e.target.files[0];
+          const url = URL.createObjectURL(file);
+          setImagePreview(url);
+      }
+  };
+
   // React Hook Form
   const { register: registerPost, handleSubmit: handleSubmitPost, formState: { errors: errorsPost }, reset: resetPost } = useForm<PostFormData>({
       resolver: zodResolver(postSchema),
@@ -136,8 +144,7 @@ export const CreatePostModal: React.FC<CreatePostModalProps> = ({
   };
 
   const onAlertSubmit = (data: AlertFormData) => {
-      const mockImage = hasImage ? "https://images.unsplash.com/photo-1543466835-00a7907e9de1?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" : undefined;
-      onSubmitAlert(data.title, data.description, data.type as AlertType, mockImage);
+      onSubmitAlert(data.title, data.description, data.type as AlertType, imagePreview || undefined);
   };
 
   return (
@@ -235,24 +242,28 @@ export const CreatePostModal: React.FC<CreatePostModalProps> = ({
                 {errorsAlert.title && <p className="text-red-500 text-xs mt-1">{errorsAlert.title.message}</p>}
                 </div>
 
-                {alertType === 'pet' && (
-                    <div className="flex items-center gap-4 p-4 bg-gray-50 dark:bg-slate-800 rounded-xl border border-gray-100 dark:border-slate-700">
-                        <div className={`w-14 h-14 rounded-xl flex items-center justify-center transition-colors ${hasImage ? 'bg-green-100 dark:bg-green-900/30 text-green-600 dark:text-green-400' : 'bg-gray-200 dark:bg-slate-700 text-gray-400'}`}>
-                            <Camera size={24} />
-                        </div>
-                        <div className="flex-1">
-                            <p className="text-sm font-semibold text-gray-700 dark:text-gray-300">Adicionar Foto</p>
-                            <p className="text-xs text-gray-400">Ajuda a identificar o animal</p>
-                        </div>
+                <div className="flex items-center gap-4 p-4 bg-gray-50 dark:bg-slate-800 rounded-xl border border-gray-100 dark:border-slate-700">
+                    <div className={`w-14 h-14 rounded-xl flex items-center justify-center transition-colors overflow-hidden ${imagePreview ? 'border-2 border-primary' : 'bg-gray-200 dark:bg-slate-700 text-gray-400'}`}>
+                        {imagePreview ? <img src={imagePreview} className="w-full h-full object-cover" /> : <Camera size={24} />}
+                    </div>
+                    <div className="flex-1">
+                        <p className="text-sm font-semibold text-gray-700 dark:text-gray-300">Adicionar Foto</p>
+                        <p className="text-xs text-gray-400">Opcional para todos os alertas</p>
+                    </div>
+                    <label className="cursor-pointer text-xs font-bold px-4 py-2 rounded-full bg-primary dark:bg-primary-dark text-white hover:bg-primary-light transition-colors">
+                        Escolher
+                        <input type="file" className="hidden" accept="image/*" onChange={handleImageUpload} />
+                    </label>
+                    {imagePreview && (
                         <button 
                             type="button"
-                            onClick={() => setHasImage(!hasImage)}
-                            className={`text-xs font-bold px-4 py-2 rounded-full transition-colors ${hasImage ? 'bg-red-100 dark:bg-red-900/30 text-red-600 dark:text-red-400' : 'bg-primary dark:bg-primary-dark text-white'}`}
+                            onClick={() => setImagePreview(null)}
+                            className="text-xs font-bold px-3 py-2 text-red-500 hover:bg-red-50 rounded-full"
                         >
-                            {hasImage ? 'Remover' : 'Adicionar'}
+                            Remover
                         </button>
-                    </div>
-                )}
+                    )}
+                </div>
 
                 <div>
                 <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Detalhes</label>

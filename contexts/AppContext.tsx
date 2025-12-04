@@ -1,0 +1,195 @@
+import React, { createContext, useContext, useState, useEffect } from 'react';
+import { User, Post, Alert, Message, ToastNotification, PostType, AlertType, Favorite } from '../types';
+
+interface AppContextType {
+  currentUser: string | null;
+  loginUser: (name: string) => void;
+  logoutUser: () => void;
+
+  theme: 'light' | 'dark';
+  toggleTheme: () => void;
+
+  posts: Post[];
+  addPost: (post: Post) => void;
+
+  alerts: Alert[];
+  addAlert: (alert: Alert) => void;
+
+  messages: Message[];
+  addMessage: (message: Message) => void;
+
+  favorites: Favorite[];
+  addFavorite: (item: Favorite) => void;
+  removeFavorite: (id: string) => void;
+  isFavorite: (itemId: string) => boolean;
+
+  toasts: ToastNotification[];
+  addToast: (message: string, type: 'success' | 'error') => void;
+  removeToast: (id: number) => void;
+
+  // Features
+  badges: string[]; // Mock badges for now
+
+  // Navigation State (Simple view switching)
+  currentView: 'home' | 'saved' | 'profile' | 'events' | 'services';
+  setCurrentView: (view: 'home' | 'saved' | 'profile' | 'events' | 'services') => void;
+}
+
+const AppContext = createContext<AppContextType | undefined>(undefined);
+
+// Initial Data
+const INITIAL_POSTS: Post[] = [
+  { id: 1, title: "Eletricista Residencial", desc: "Instalação de tomadas, chuveiros e reparos. Orçamento grátis.", author: "Carlos Ruiz", type: "autonomo" },
+  { id: 2, title: "Pães Artesanais - 20% OFF", desc: "Toda a linha de fermentação natural com desconto hoje.", author: "Padaria do Zé", type: "promocao" },
+  { id: 3, title: "Mercadinho da Esquina", desc: "Entregas gratuitas para compras acima de R$50 no bairro.", author: "Mercadinho Bom Dia", type: "comercio" },
+  { id: 4, title: "Aulas de Inglês", desc: "Aulas particulares para crianças e adolescentes. Primeira aula grátis.", author: "Ana Lima", type: "autonomo" }
+];
+
+const INITIAL_ALERTS: Alert[] = [
+  { id: 101, title: "Troca de Lâmpada", desc: "Preciso de ajuda para trocar lâmpada do quintal. Sou idosa e não alcanço.", author: "Dona Maria", type: "ajuda", timestamp: "10:00" },
+  { id: 102, title: "Gato Desaparecido", desc: "Gato siamês atende por 'Mingau'. Visto por último na Rua das Flores.", author: "Julia S.", type: "pet", image: "https://images.unsplash.com/photo-1513245543132-31f507417b26?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80", timestamp: "Ontem" },
+  { id: 103, title: "Movimentação Estranha", desc: "Carro prata parado há muito tempo na esquina da padaria. Fiquem atentos.", author: "Vigilância Comunitária", type: "seguranca", timestamp: "Agora" }
+];
+
+const INITIAL_MESSAGES: Message[] = [
+  { id: 1, text: "Bom dia pessoal! Alguém recomenda um encanador?", author: "Pedro M.", timestamp: "10:30" },
+  { id: 2, text: "O Carlos é ótimo, o número dele está nos anúncios acima!", author: "Mariana S.", timestamp: "10:32" }
+];
+
+export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  const [currentUser, setCurrentUser] = useState<string | null>(null);
+  const [theme, setTheme] = useState<'light' | 'dark'>('light');
+  const [posts, setPosts] = useState<Post[]>(INITIAL_POSTS);
+  const [alerts, setAlerts] = useState<Alert[]>(INITIAL_ALERTS);
+  const [messages, setMessages] = useState<Message[]>(INITIAL_MESSAGES);
+  const [favorites, setFavorites] = useState<Favorite[]>([]);
+  const [toasts, setToasts] = useState<ToastNotification[]>([]);
+  const [badges, setBadges] = useState<string[]>([]);
+  const [currentView, setCurrentView] = useState<'home' | 'saved' | 'profile' | 'events' | 'services'>('home');
+
+  // Load from LocalStorage
+  useEffect(() => {
+    const savedUser = localStorage.getItem('cb_user');
+    if (savedUser) setCurrentUser(savedUser);
+
+    const savedTheme = localStorage.getItem('cb_theme');
+    if (savedTheme === 'dark' || (!savedTheme && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+      setTheme('dark');
+      document.documentElement.classList.add('dark');
+    } else {
+      setTheme('light');
+      document.documentElement.classList.remove('dark');
+    }
+
+    const savedFavorites = localStorage.getItem('cb_favorites');
+    if (savedFavorites) {
+        setFavorites(JSON.parse(savedFavorites));
+    }
+  }, []);
+
+  // Theme Effect
+  useEffect(() => {
+    if (theme === 'dark') {
+      document.documentElement.classList.add('dark');
+      localStorage.setItem('cb_theme', 'dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+      localStorage.setItem('cb_theme', 'light');
+    }
+  }, [theme]);
+
+  // Favorites Effect
+  useEffect(() => {
+      localStorage.setItem('cb_favorites', JSON.stringify(favorites));
+  }, [favorites]);
+
+  const loginUser = (name: string) => {
+    setCurrentUser(name);
+    localStorage.setItem('cb_user', name);
+    addToast(`Olá, ${name}! Você está conectado.`, 'success');
+  };
+
+  const logoutUser = () => {
+      setCurrentUser(null);
+      localStorage.removeItem('cb_user');
+      addToast('Você saiu da conta.', 'success');
+  }
+
+  const toggleTheme = () => setTheme(prev => (prev === 'light' ? 'dark' : 'light'));
+
+  const addPost = (post: Post) => {
+      setPosts(prev => [post, ...prev]);
+  };
+
+  const addAlert = (alert: Alert) => {
+      setAlerts(prev => [alert, ...prev]);
+  };
+
+  const addMessage = (message: Message) => {
+      setMessages(prev => [...prev, message]);
+  };
+
+  const addFavorite = (item: Favorite) => {
+      setFavorites(prev => [...prev, item]);
+      addToast('Item salvo em favoritos!', 'success');
+  };
+
+  const removeFavorite = (id: string) => {
+      setFavorites(prev => prev.filter(f => f.id !== id));
+      addToast('Item removido dos favoritos.', 'success');
+  };
+
+  const isFavorite = (itemId: string) => {
+      return favorites.some(f => f.itemId === itemId.toString());
+  };
+
+  const addToast = (message: string, type: 'success' | 'error') => {
+    const id = Date.now();
+    setToasts(prev => [...prev, { id, message, type }]);
+    setTimeout(() => {
+      setToasts(prev => prev.filter(t => t.id !== id));
+    }, 3000);
+  };
+
+  const removeToast = (id: number) => {
+    setToasts(prev => prev.filter(t => t.id !== id));
+  };
+
+  return (
+    <AppContext.Provider
+      value={{
+        currentUser,
+        loginUser,
+        logoutUser,
+        theme,
+        toggleTheme,
+        posts,
+        addPost,
+        alerts,
+        addAlert,
+        messages,
+        addMessage,
+        favorites,
+        addFavorite,
+        removeFavorite,
+        isFavorite,
+        toasts,
+        addToast,
+        removeToast,
+        badges,
+        currentView,
+        setCurrentView
+      }}
+    >
+      {children}
+    </AppContext.Provider>
+  );
+};
+
+export const useApp = () => {
+  const context = useContext(AppContext);
+  if (!context) {
+    throw new Error('useApp must be used within an AppProvider');
+  }
+  return context;
+};

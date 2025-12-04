@@ -13,6 +13,7 @@ import { CheckCircle, AlertCircle, X } from 'lucide-react';
 import { SavedItems } from './components/SavedItems';
 import { EventsSection } from './components/EventsSection';
 import { ServiceDirectory } from './components/ServiceDirectory';
+import { UserProfile } from './components/UserProfile';
 
 export default function App() {
   const {
@@ -98,6 +99,8 @@ export default function App() {
               return <EventsSection />;
           case 'services':
               return <ServiceDirectory />;
+          case 'profile':
+              return <UserProfile />;
           case 'home':
           default:
               return (

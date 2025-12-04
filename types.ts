@@ -7,6 +7,9 @@ export interface Post {
   desc: string;
   author: string;
   type: PostType;
+  image?: string;
+  latitude?: number;
+  longitude?: number;
 }
 
 export interface Alert {
@@ -72,4 +75,6 @@ export interface Event {
     date: string;
     location: string;
     category: 'community' | 'religious' | 'market' | 'other';
+    latitude?: number;
+    longitude?: number;
 }

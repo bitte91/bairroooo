@@ -1,6 +1,7 @@
 import React from 'react';
-import { HandHeart, Sun, Moon, Menu } from 'lucide-react';
+import { HandHeart, Sun, Moon, Menu, User } from 'lucide-react';
 import { useApp } from '../contexts/AppContext';
+import { NotificationCenter } from './NotificationCenter';
 
 interface HeaderProps {
   scrollToId: (id: string) => void;
@@ -60,12 +61,22 @@ export const Header: React.FC<HeaderProps> = ({ scrollToId, darkMode, toggleThem
             </ul>
             </nav>
 
+            <NotificationCenter />
+
             <button 
                 onClick={toggleTheme}
                 className="hidden md:block p-2 rounded-full text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-slate-700 transition-colors"
                 aria-label="Alternar tema"
             >
                 {darkMode ? <Sun size={20} /> : <Moon size={20} />}
+            </button>
+
+             <button
+                onClick={() => setCurrentView('profile')}
+                className="p-2 rounded-full text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-slate-700 transition-colors"
+                aria-label="Perfil"
+            >
+                <User size={20} />
             </button>
         </div>
       </div>

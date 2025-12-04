@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
-import { Search, PenTool, ShoppingBag, Truck } from 'lucide-react';
+import { Search, PenTool, ShoppingBag, Truck, Map as MapIcon, List } from 'lucide-react';
 import { useApp } from '../contexts/AppContext';
+import { MapComponent } from './MapComponent';
 
 export const ServiceDirectory = () => {
     const { posts } = useApp();
     const [searchTerm, setSearchTerm] = useState('');
+    const [viewMode, setViewMode] = useState<'list' | 'map'>('list');
 
     const services = posts.filter(p => p.type === 'autonomo' || p.type === 'comercio');
     const filtered = services.filter(p =>
@@ -14,9 +16,27 @@ export const ServiceDirectory = () => {
 
     return (
         <section className="animate-fadeIn pb-20">
-             <h2 className="text-2xl md:text-3xl font-heading font-bold text-gray-800 dark:text-white mb-6 flex items-center gap-2">
-                <ShoppingBag className="text-primary" /> Guia de Serviços
-            </h2>
+             <div className="flex justify-between items-center mb-6">
+                <h2 className="text-2xl md:text-3xl font-heading font-bold text-gray-800 dark:text-white flex items-center gap-2">
+                    <ShoppingBag className="text-primary" /> Guia de Serviços
+                </h2>
+                 <div className="flex bg-gray-100 dark:bg-slate-800 p-1 rounded-lg">
+                    <button
+                        onClick={() => setViewMode('list')}
+                        className={`p-2 rounded-md transition-all ${viewMode === 'list' ? 'bg-white dark:bg-slate-700 shadow-sm text-primary' : 'text-gray-400'}`}
+                        title="Lista"
+                    >
+                        <List size={20} />
+                    </button>
+                    <button
+                        onClick={() => setViewMode('map')}
+                        className={`p-2 rounded-md transition-all ${viewMode === 'map' ? 'bg-white dark:bg-slate-700 shadow-sm text-primary' : 'text-gray-400'}`}
+                        title="Mapa"
+                    >
+                        <MapIcon size={20} />
+                    </button>
+                </div>
+            </div>
 
             <div className="bg-white dark:bg-slate-800 p-6 rounded-2xl shadow-sm border border-gray-100 dark:border-slate-700 mb-8">
                 <div className="relative">
@@ -31,9 +51,12 @@ export const ServiceDirectory = () => {
                 </div>
             </div>
 
-            <div className="space-y-4">
-                {filtered.map(service => (
-                    <div key={service.id} className="flex flex-col md:flex-row gap-4 bg-white dark:bg-slate-800 p-5 rounded-xl shadow-sm border border-gray-100 dark:border-slate-700 hover:shadow-md transition-all">
+            {viewMode === 'map' ? (
+                 <MapComponent items={filtered} height="600px" />
+            ) : (
+                <div className="space-y-4">
+                    {filtered.map(service => (
+                        <div key={service.id} className="flex flex-col md:flex-row gap-4 bg-white dark:bg-slate-800 p-5 rounded-xl shadow-sm border border-gray-100 dark:border-slate-700 hover:shadow-md transition-all">
                         <div className="w-12 h-12 rounded-full bg-indigo-50 dark:bg-indigo-900/30 text-indigo-600 dark:text-indigo-400 flex items-center justify-center shrink-0">
                             {service.type === 'autonomo' ? <PenTool size={20} /> : <Truck size={20} />}
                         </div>
@@ -51,10 +74,11 @@ export const ServiceDirectory = () => {
                             <button className="flex-1 md:flex-none px-4 py-2 bg-primary text-white text-sm font-bold rounded-lg hover:bg-primary-dark transition-colors">
                                 Contatar
                             </button>
+                            </div>
                         </div>
-                    </div>
-                ))}
-            </div>
+                    ))}
+                </div>
+            )}
         </section>
     );
 };

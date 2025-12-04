@@ -1,0 +1,59 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* Updated Color Palette for Accessibility and Modern Feel */
+    --color-primary: 79 70 229; /* Indigo 600 #4F46E5 */
+    --color-primary-dark: 67 56 202; /* Indigo 700 */
+    --color-primary-light: 165 180 252; /* Indigo 200 */
+
+    --color-bg-light: 248 250 252; /* Slate 50 */
+    --color-text-light: 15 23 42; /* Slate 900 */
+
+    --color-bg-dark: 15 23 42; /* Slate 900 */
+    --color-surface-dark: 30 41 59; /* Slate 800 */
+    --color-text-dark: 241 245 249; /* Slate 100 */
+
+    /* Typography Clamp for Responsiveness */
+    --fs-base: clamp(1rem, 2.5vw, 1.125rem);
+    --fs-h1: clamp(1.8rem, 5vw, 2.5rem);
+    --fs-h2: clamp(1.4rem, 4vw, 2rem);
+    --fs-h3: clamp(1.1rem, 3vw, 1.5rem);
+  }
+
+  html {
+    font-size: 16px;
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply bg-slate-50 text-slate-900 dark:bg-slate-950 dark:text-slate-100 transition-colors duration-300;
+    font-size: var(--fs-base);
+    line-height: 1.6;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-heading font-bold text-slate-800 dark:text-white;
+  }
+
+  h1 { font-size: var(--fs-h1); }
+  h2 { font-size: var(--fs-h2); }
+  h3 { font-size: var(--fs-h3); }
+
+  /* Larger touch targets */
+  button, a {
+    @apply min-h-[44px] min-w-[44px] touch-manipulation;
+  }
+}
+
+@layer components {
+  .btn-primary {
+    @apply px-6 py-3 bg-indigo-600 text-white rounded-xl font-bold shadow-md hover:bg-indigo-700 transition-all active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed;
+  }
+
+  .card {
+    @apply bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-700 p-6 transition-all hover:shadow-md;
+  }
+}

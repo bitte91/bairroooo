@@ -1,4 +1,4 @@
-export type PostType = 'comercio' | 'autonomo' | 'promocao';
+export type PostType = 'comercio' | 'autonomo' | 'promocao' | 'vaga';
 export type AlertType = 'ajuda' | 'pet' | 'seguranca';
 
 export interface Post {

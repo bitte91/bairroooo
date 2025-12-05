@@ -14,6 +14,9 @@ import { SavedItems } from './components/SavedItems';
 import { EventsSection } from './components/EventsSection';
 import { ServiceDirectory } from './components/ServiceDirectory';
 import { UserProfile } from './components/UserProfile';
+import { QuickAccess } from './components/QuickAccess';
+import { MapView } from './components/MapView';
+import { BottomNav } from './components/BottomNav';
 
 export default function App() {
   const {
@@ -99,6 +102,8 @@ export default function App() {
               return <EventsSection />;
           case 'services':
               return <ServiceDirectory />;
+          case 'map':
+              return <MapView />;
           case 'profile':
               return <UserProfile />;
           case 'home':
@@ -108,6 +113,8 @@ export default function App() {
                     <Hero
                     onOpenPostModal={() => openCreateModal('post')}
                     />
+
+                    <QuickAccess />
 
                     <div id="news" className="scroll-mt-24">
                         <NewsSection />
@@ -155,6 +162,8 @@ export default function App() {
       </main>
 
       <Footer />
+
+      <BottomNav />
 
       {/* Modals */}
       {isLoginModalOpen && (

@@ -35,8 +35,8 @@ interface AppContextType {
   badges: string[]; // Mock badges for now
 
   // Navigation State (Simple view switching)
-  currentView: 'home' | 'saved' | 'profile' | 'events' | 'services';
-  setCurrentView: (view: 'home' | 'saved' | 'profile' | 'events' | 'services') => void;
+  currentView: 'home' | 'saved' | 'profile' | 'events' | 'services' | 'map';
+  setCurrentView: (view: 'home' | 'saved' | 'profile' | 'events' | 'services' | 'map') => void;
 }
 
 const AppContext = createContext<AppContextType | undefined>(undefined);
@@ -49,7 +49,8 @@ const INITIAL_POSTS: Post[] = [
   { id: 1, title: "Eletricista Residencial", desc: "Instalação de tomadas, chuveiros e reparos. Orçamento grátis.", author: "Carlos Ruiz", type: "autonomo", latitude: -23.5510, longitude: -46.6340 },
   { id: 2, title: "Pães Artesanais - 20% OFF", desc: "Toda a linha de fermentação natural com desconto hoje.", author: "Padaria do Zé", type: "promocao", latitude: -23.5520, longitude: -46.6320 },
   { id: 3, title: "Mercadinho da Esquina", desc: "Entregas gratuitas para compras acima de R$50 no bairro.", author: "Mercadinho Bom Dia", type: "comercio", latitude: -23.5490, longitude: -46.6350 },
-  { id: 4, title: "Aulas de Inglês", desc: "Aulas particulares para crianças e adolescentes. Primeira aula grátis.", author: "Ana Lima", type: "autonomo", latitude: -23.5500, longitude: -46.6310 }
+  { id: 4, title: "Aulas de Inglês", desc: "Aulas particulares para crianças e adolescentes. Primeira aula grátis.", author: "Ana Lima", type: "autonomo", latitude: -23.5500, longitude: -46.6310 },
+  { id: 5, title: "Balconista de Padaria", desc: "Vaga para período da manhã. Entregar currículo no local.", author: "Padaria do Zé", type: "vaga", latitude: -23.5520, longitude: -46.6320 }
 ];
 
 const INITIAL_ALERTS: Alert[] = [
@@ -73,7 +74,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   const [toasts, setToasts] = useState<ToastNotification[]>([]);
   const [notifications, setNotifications] = useState<Notification[]>([]);
   const [badges, setBadges] = useState<string[]>([]);
-  const [currentView, setCurrentView] = useState<'home' | 'saved' | 'profile' | 'events' | 'services'>('home');
+  const [currentView, setCurrentView] = useState<'home' | 'saved' | 'profile' | 'events' | 'services' | 'map'>('home');
 
   // Load from LocalStorage
   useEffect(() => {

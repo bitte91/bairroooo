@@ -17,6 +17,7 @@ import { UserProfile } from './components/UserProfile';
 import { QuickAccess } from './components/QuickAccess';
 import { MapView } from './components/MapView';
 import { BottomNav } from './components/BottomNav';
+import { Onboarding } from './components/Onboarding';
 
 export default function App() {
   const {
@@ -33,11 +34,14 @@ export default function App() {
     theme,
     toggleTheme,
     currentView,
-    setCurrentView
+    setCurrentView,
+    showOnboarding,
+    favorites
   } = useApp();
   
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
   const [isPostModalOpen, setIsPostModalOpen] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [modalConfig, setModalConfig] = useState<{initialMode: 'post' | 'alert', initialAlertType?: AlertType}>({ initialMode: 'post' });
 
   // Initial login check handled in Context
@@ -53,30 +57,43 @@ export default function App() {
 
   const handleCreatePost = (title: string, desc: string, type: PostType) => {
     if (!currentUser) return;
-    const newPost = {
-      id: Date.now(),
-      title,
-      desc,
-      type,
-      author: currentUser
-    };
-    addPost(newPost);
-    setIsPostModalOpen(false);
+    setIsSubmitting(true);
+
+    // Simulate API call
+    setTimeout(() => {
+        const newPost = {
+            id: Date.now(),
+            title,
+            desc,
+            type,
+            author: currentUser
+        };
+        addPost(newPost);
+        setIsSubmitting(false);
+        setIsPostModalOpen(false);
+        // Toast is added by Context or we can add it here if needed
+    }, 1500);
   };
 
   const handleCreateAlert = (title: string, desc: string, type: AlertType, image?: string) => {
     if (!currentUser) return;
-    const newAlert = {
-        id: Date.now(),
-        title,
-        desc,
-        type,
-        author: currentUser,
-        image,
-        timestamp: 'Agora'
-    };
-    addAlert(newAlert);
-    setIsPostModalOpen(false);
+    setIsSubmitting(true);
+
+    // Simulate API call
+    setTimeout(() => {
+        const newAlert = {
+            id: Date.now(),
+            title,
+            desc,
+            type,
+            author: currentUser,
+            image,
+            timestamp: 'Agora'
+        };
+        addAlert(newAlert);
+        setIsSubmitting(false);
+        setIsPostModalOpen(false);
+    }, 1500);
   };
 
   const handleSendMessage = (text: string) => {
@@ -115,6 +132,34 @@ export default function App() {
                     />
 
                     <QuickAccess />
+
+                    {/* Meus Lugares Preview - Only if has favorites */}
+                    {favorites.length > 0 && (
+                      <div className="mb-8 animate-fadeIn">
+                        <div className="flex items-center justify-between mb-4">
+                          <h2 className="text-xl font-bold text-slate-800 dark:text-white">Meus Lugares Favoritos</h2>
+                          <button
+                            onClick={() => setCurrentView('saved')}
+                            className="text-sm font-semibold text-teal-600 hover:text-teal-700 dark:text-teal-400"
+                          >
+                            Ver todos ({favorites.length})
+                          </button>
+                        </div>
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                            {favorites.slice(0, 3).map(fav => (
+                                <div key={fav.id} className="bg-white dark:bg-slate-800 p-4 rounded-xl shadow-sm border border-slate-100 dark:border-slate-700 flex items-center justify-between">
+                                    <div>
+                                        <span className="text-xs font-bold uppercase text-slate-400">{fav.itemType}</span>
+                                        <h3 className="font-semibold text-slate-800 dark:text-white line-clamp-1">{fav.title}</h3>
+                                    </div>
+                                    <button onClick={() => setCurrentView('saved')} className="p-2 text-teal-600 bg-teal-50 dark:bg-teal-900/30 rounded-lg">
+                                        ➔
+                                    </button>
+                                </div>
+                            ))}
+                        </div>
+                      </div>
+                    )}
 
                     <div id="news" className="scroll-mt-24">
                         <NewsSection />
@@ -165,6 +210,9 @@ export default function App() {
 
       <BottomNav />
 
+      {/* Onboarding Overlay */}
+      {showOnboarding && <Onboarding />}
+
       {/* Modals */}
       {isLoginModalOpen && (
         <LoginModal 
@@ -180,6 +228,7 @@ export default function App() {
           onSubmitAlert={handleCreateAlert}
           initialMode={modalConfig.initialMode}
           initialAlertType={modalConfig.initialAlertType}
+          isSubmitting={isSubmitting}
         />
       )}
 

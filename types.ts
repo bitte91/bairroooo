@@ -10,6 +10,7 @@ export interface Post {
   image?: string;
   latitude?: number;
   longitude?: number;
+  category?: string; // New field for specific category (e.g., 'mercado', 'farmacia')
 }
 
 export interface Alert {

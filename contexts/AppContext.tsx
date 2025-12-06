@@ -34,6 +34,9 @@ interface AppContextType {
   // Features
   badges: string[]; // Mock badges for now
 
+  showOnboarding: boolean;
+  completeOnboarding: () => void;
+
   // Navigation State (Simple view switching)
   currentView: 'home' | 'saved' | 'profile' | 'events' | 'services' | 'map';
   setCurrentView: (view: 'home' | 'saved' | 'profile' | 'events' | 'services' | 'map') => void;
@@ -75,9 +78,16 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   const [notifications, setNotifications] = useState<Notification[]>([]);
   const [badges, setBadges] = useState<string[]>([]);
   const [currentView, setCurrentView] = useState<'home' | 'saved' | 'profile' | 'events' | 'services' | 'map'>('home');
+  const [showOnboarding, setShowOnboarding] = useState(false);
 
   // Load from LocalStorage
   useEffect(() => {
+    // Onboarding check
+    const onboardingDone = localStorage.getItem('cb_onboarding_done');
+    if (!onboardingDone) {
+      setShowOnboarding(true);
+    }
+
     const savedUser = localStorage.getItem('cb_user');
     if (savedUser) setCurrentUser(savedUser);
 
@@ -192,6 +202,11 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       setNotifications([]);
   };
 
+  const completeOnboarding = () => {
+      setShowOnboarding(false);
+      localStorage.setItem('cb_onboarding_done', 'true');
+  };
+
   return (
     <AppContext.Provider
       value={{
@@ -218,7 +233,9 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         clearNotifications,
         badges,
         currentView,
-        setCurrentView
+        setCurrentView,
+        showOnboarding,
+        completeOnboarding
       }}
     >
       {children}

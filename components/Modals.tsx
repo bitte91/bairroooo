@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { PostType, AlertType } from '../types';
-import { X, Store, HeartHandshake, AlertTriangle, PawPrint, Camera } from 'lucide-react';
+import { X, Store, HeartHandshake, AlertTriangle, PawPrint, Camera, Loader2 } from 'lucide-react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -105,6 +105,7 @@ interface CreatePostModalProps {
   onSubmitAlert: (title: string, desc: string, type: AlertType, image?: string) => void;
   initialMode?: 'post' | 'alert';
   initialAlertType?: AlertType;
+  isSubmitting?: boolean;
 }
 
 export const CreatePostModal: React.FC<CreatePostModalProps> = ({ 
@@ -112,7 +113,8 @@ export const CreatePostModal: React.FC<CreatePostModalProps> = ({
   onSubmitPost, 
   onSubmitAlert, 
   initialMode = 'post',
-  initialAlertType = 'ajuda'
+  initialAlertType = 'ajuda',
+  isSubmitting = false
 }) => {
   const [mode, setMode] = useState<'post' | 'alert'>(initialMode);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
@@ -282,15 +284,23 @@ export const CreatePostModal: React.FC<CreatePostModalProps> = ({
           <button 
             onClick={onClose}
             className="flex-1 py-3.5 bg-white dark:bg-transparent border border-gray-200 dark:border-slate-700 text-gray-700 dark:text-gray-300 rounded-xl font-bold hover:bg-gray-50 dark:hover:bg-slate-800 transition-colors"
+            disabled={isSubmitting}
           >
             Cancelar
           </button>
           <button 
             form={mode === 'post' ? 'postForm' : 'alertForm'}
             type="submit"
-            className={`flex-1 py-3.5 rounded-xl font-bold shadow-lg transition-all ${mode === 'post' ? 'bg-primary dark:bg-primary-dark hover:bg-primary-light text-white' : 'bg-rose-500 dark:bg-rose-600 hover:bg-rose-600 text-white'}`}
+            disabled={isSubmitting}
+            className={`flex-1 py-3.5 rounded-xl font-bold shadow-lg transition-all flex items-center justify-center gap-2 ${mode === 'post' ? 'bg-primary dark:bg-primary-dark hover:bg-primary-light text-white' : 'bg-rose-500 dark:bg-rose-600 hover:bg-rose-600 text-white'} ${isSubmitting ? 'opacity-70 cursor-not-allowed' : ''}`}
           >
-            {mode === 'post' ? 'Publicar Anúncio' : 'Publicar Alerta'}
+            {isSubmitting ? (
+              <>
+                <Loader2 size={20} className="animate-spin" /> Publicando...
+              </>
+            ) : (
+              mode === 'post' ? 'Publicar Anúncio' : 'Publicar Alerta'
+            )}
           </button>
         </div>
       </div>

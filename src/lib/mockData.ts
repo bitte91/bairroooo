@@ -1,4 +1,4 @@
-import { Business, ServiceProvider, SafetyAlert, NeighborGroup } from '../shared/types';
+import { Business, ServiceProvider, SafetyAlert, NeighborGroup, NewsItem, Event } from '../shared/types';
 
 export const MOCK_BUSINESSES: Business[] = [
   {
@@ -94,7 +94,8 @@ export const MOCK_SAFETY_ALERTS: SafetyAlert[] = [
     urgency: 'media',
     street: 'Av. Principal com Rua das Flores',
     latitude: -23.5520,
-    longitude: -46.6320
+    longitude: -46.6320,
+    resolved: false
   },
   {
     id: 'sa2',
@@ -103,7 +104,8 @@ export const MOCK_SAFETY_ALERTS: SafetyAlert[] = [
     description: 'Cachorro caramelo visto correndo assustado próximo ao parque.',
     createdAt: new Date(Date.now() - 3600000).toISOString(),
     createdBy: 'Morador Anônimo',
-    urgency: 'baixa'
+    urgency: 'baixa',
+    resolved: false
   }
 ];
 
@@ -124,4 +126,82 @@ export const MOCK_NEIGHBOR_GROUPS: NeighborGroup[] = [
       'Conheça seus vizinhos de porta'
     ]
   }
+];
+
+export const MOCK_NEWS: NewsItem[] = [
+    {
+        id: 1,
+        title: "Inauguração da Horta Comunitária!",
+        source: "Conecta Vila",
+        time: "Há 2 horas",
+        imageUrl: "https://images.unsplash.com/photo-1592419044706-39796d40f98c?auto=format&fit=crop&q=80&w=800",
+        link: "#"
+    },
+    {
+        id: 2,
+        title: "Melhorias na Iluminação Pública",
+        source: "Prefeitura",
+        time: "Ontem",
+        imageUrl: "https://images.unsplash.com/photo-1510596713412-56030c252371?auto=format&fit=crop&q=80&w=800",
+        link: "#"
+    },
+    {
+        id: 3,
+        title: "Campeonato de Futebol do Bairro",
+        source: "Associação de Moradores",
+        time: "23 Out",
+        imageUrl: "https://images.unsplash.com/photo-1517466787929-bc90951d0974?auto=format&fit=crop&q=80&w=800",
+        link: "#"
+    }
+];
+
+export const MOCK_EVENTS: (Event & { section: 'today' | 'tomorrow' | 'next_week', timeStr: string })[] = [
+    {
+        id: 1,
+        title: "Feira de Trocas e Doações",
+        description: "Traga o que não usa mais e troque por algo que precisa.",
+        timeStr: "14:00 - 17:00",
+        location: "Centro Comunitário da Vila",
+        date: "Hoje, 24 de Outubro",
+        category: 'community',
+        section: "today",
+        latitude: 0,
+        longitude: 0
+    },
+    {
+        id: 2,
+        title: "Reunião de Moradores: Melhorias na Praça",
+        description: "Discussão sobre o novo projeto de paisagismo.",
+        timeStr: "19:30",
+        location: "Salão Paroquial",
+        date: "Amanhã, 25 de Outubro",
+        category: 'community',
+        section: "tomorrow",
+        latitude: 0,
+        longitude: 0
+    },
+    {
+        id: 3,
+        title: "Oficina de Jardinagem Urbana",
+        description: "Aprenda a cultivar seus próprios alimentos em pequenos espaços.",
+        timeStr: "Sábado, 28 Out • 09:00",
+        location: "Praça Central",
+        date: "Próxima Semana",
+        category: 'other',
+        section: "next_week",
+        latitude: 0,
+        longitude: 0
+    },
+    {
+        id: 4,
+        title: "Festa Junina Fora de Época",
+        description: "Comidas típicas, música e diversão para toda a família.",
+        timeStr: "Domingo, 29 Out • 16:00",
+        location: "Campo de Futebol",
+        date: "Próxima Semana",
+        category: 'community',
+        section: "next_week",
+        latitude: 0,
+        longitude: 0
+    }
 ];

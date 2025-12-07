@@ -4,34 +4,7 @@ import { Card } from '../../shared/components/ui/Card';
 import { Input } from '../../shared/components/ui/Input';
 import { Search, Filter, Share2 } from 'lucide-react';
 import { Button } from '../../shared/components/ui/Button';
-
-// Mock data based on Image 4
-const NEWS_ITEMS = [
-    {
-        id: 1,
-        title: "Inauguração da Horta Comunitária!",
-        description: "Venha participar do plantio neste sábado às 9h. Todos são bem-vindos para contribuir e aprender.",
-        image: "https://images.unsplash.com/photo-1592419044706-39796d40f98c?auto=format&fit=crop&q=80&w=800", // Garden image
-        time: "Há 2 horas",
-        category: "Eventos"
-    },
-    {
-        id: 2,
-        title: "Melhorias na Iluminação Pública",
-        description: "Instalação de novos postes de LED na Rua das Flores. Maior segurança para todos.",
-        image: "https://images.unsplash.com/photo-1510596713412-56030c252371?auto=format&fit=crop&q=80&w=800", // Street light
-        time: "Ontem",
-        category: "Melhorias"
-    },
-    {
-        id: 3,
-        title: "Campeonato de Futebol do Bairro",
-        description: "As inscrições para os times estão abertas até sexta-feira. Participe!",
-        image: "https://images.unsplash.com/photo-1517466787929-bc90951d0974?auto=format&fit=crop&q=80&w=800", // Soccer
-        time: "23 Out",
-        category: "Eventos"
-    }
-];
+import { MOCK_NEWS } from '../../lib/mockData';
 
 const CATEGORIES = ["Todas", "Eventos", "Segurança", "Melhorias", "Local"];
 
@@ -76,18 +49,20 @@ export const NewsFeed: React.FC = () => {
 
             {/* Feed */}
             <div className="p-4 space-y-4">
-                {NEWS_ITEMS.map((item) => (
+                {MOCK_NEWS.map((item) => (
                     <Card key={item.id} className="overflow-hidden flex flex-col hover:shadow-md transition-shadow cursor-pointer border-none shadow-sm bg-card">
                         <div className="h-40 w-full relative">
                             <img
-                                src={item.image}
+                                src={item.imageUrl}
                                 alt={item.title}
                                 className="w-full h-full object-cover"
                             />
                         </div>
                         <div className="p-4">
                             <h3 className="font-bold text-lg mb-1 leading-tight">{item.title}</h3>
-                            <p className="text-sm text-muted-foreground mb-3 line-clamp-2">{item.description}</p>
+                            <p className="text-sm text-muted-foreground mb-3 line-clamp-2">
+                                Fonte: {item.source}
+                            </p>
                             <div className="flex justify-between items-center text-xs text-muted-foreground">
                                 <span>{item.time}</span>
                             </div>

@@ -1,5 +1,8 @@
+import { tokens } from './src/styles/tokens';
+
 /** @type {import('tailwindcss').Config} */
 export default {
+  darkMode: ['class'],
   content: [
     "./index.html",
     "./src/**/*.{js,ts,jsx,tsx}",
@@ -13,12 +16,14 @@ export default {
         background: "hsl(var(--background))",
         foreground: "hsl(var(--foreground))",
         primary: {
-          DEFAULT: "hsl(var(--primary))",
+          DEFAULT: tokens.colors.primary.DEFAULT,
+          ...tokens.colors.primary,
           foreground: "hsl(var(--primary-foreground))",
         },
         secondary: {
           DEFAULT: "hsl(var(--secondary))",
           foreground: "hsl(var(--secondary-foreground))",
+          ...tokens.colors.secondary,
         },
         destructive: {
           DEFAULT: "hsl(var(--destructive))",
@@ -49,9 +54,12 @@ export default {
         }
       },
       borderRadius: {
-        lg: "var(--radius)",
-        md: "calc(var(--radius) - 2px)",
-        sm: "calc(var(--radius) - 4px)",
+        lg: tokens.borderRadius.lg,
+        md: tokens.borderRadius.md,
+        sm: tokens.borderRadius.sm,
+      },
+      spacing: {
+        ...tokens.spacing
       },
       fontFamily: {
         sans: ['Inter', 'sans-serif'],

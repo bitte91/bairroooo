@@ -54,7 +54,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onLogin, onClose }) => {
   return (
     <Modal 
       title="Bem-vindo!" 
-      subtitle="Identifique-se para participar da comunidade."
+      subtitle="Para postar e interagir no bairro, precisamos de um perfil básico. Não pedimos dados sensíveis."
       onClose={onClose}
     >
       <div className="space-y-5">
@@ -191,7 +191,7 @@ export const CreatePostModal: React.FC<CreatePostModalProps> = ({
                 <input 
                     type="text" 
                     {...registerPost('title')}
-                    placeholder="Ex: Vendo Bolos Caseiros"
+                    placeholder="Título: Ex: Perdi meu cachorro na Rua A..."
                     className={`w-full px-5 py-4 bg-gray-100 dark:bg-slate-800 rounded-xl border-2 focus:bg-white dark:focus:bg-slate-900 outline-none transition-all text-gray-800 dark:text-white ${errorsPost.title ? 'border-red-500' : 'border-transparent focus:border-primary dark:focus:border-primary-light'}`}
                 />
                 {errorsPost.title && <p className="text-red-500 text-xs mt-1">{errorsPost.title.message}</p>}
@@ -201,7 +201,7 @@ export const CreatePostModal: React.FC<CreatePostModalProps> = ({
                 <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Descrição</label>
                 <textarea 
                     {...registerPost('description')}
-                    placeholder="Detalhes do serviço ou produto..."
+                    placeholder="Descrição: Explique o que aconteceu, horários e pontos de referência."
                     rows={3}
                     className={`w-full px-5 py-4 bg-gray-100 dark:bg-slate-800 rounded-xl border-2 focus:bg-white dark:focus:bg-slate-900 outline-none transition-all resize-none text-gray-800 dark:text-white ${errorsPost.description ? 'border-red-500' : 'border-transparent focus:border-primary dark:focus:border-primary-light'}`}
                 />

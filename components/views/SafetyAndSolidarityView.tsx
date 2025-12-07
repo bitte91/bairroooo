@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import { useApp } from '../../contexts/AppContext';
 import { SafetyAlert, NeighborGroup, AlertCategory } from '../../types';
-import { Shield, AlertTriangle, Users, MapPin, Eye, Clock, PlusCircle } from 'lucide-react';
+import { Shield, AlertTriangle, Users, MapPin, Clock, PlusCircle } from 'lucide-react';
+import { Card } from '../ui/Card';
 
 const ALERT_CATEGORIES: { id: AlertCategory; label: string; color: string }[] = [
   { id: 'seguranca', label: 'Segurança', color: 'bg-red-100 text-red-700' },
@@ -133,7 +134,7 @@ export const SafetyAndSolidarityView: React.FC = () => {
           {safetyAlerts.map(alert => {
             const cat = ALERT_CATEGORIES.find(c => c.id === alert.category);
             return (
-              <div key={alert.id} className="bg-white dark:bg-slate-800 p-5 rounded-xl shadow-sm border border-slate-100 dark:border-slate-700 relative overflow-hidden">
+              <Card key={alert.id} className="relative overflow-hidden">
                 {alert.urgency === 'alta' && (
                     <div className="absolute top-0 right-0 px-3 py-1 bg-red-500 text-white text-xs font-bold rounded-bl-xl">
                         URGENTE
@@ -163,7 +164,7 @@ export const SafetyAndSolidarityView: React.FC = () => {
                         <span>{alert.street}</span>
                     </div>
                 )}
-              </div>
+              </Card>
             );
           })}
         </div>

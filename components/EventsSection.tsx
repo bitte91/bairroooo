@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Calendar, MapPin, Clock, Users, Map as MapIcon, List } from 'lucide-react';
 import { Event } from '../types';
 import { MapComponent } from './MapComponent';
+import { Card } from './ui/Card';
 
 const INITIAL_EVENTS: Event[] = [
     { id: 1, title: 'Feira de Trocas', description: 'Traga o que não usa e troque com vizinhos.', date: 'Sábado, 14:00', location: 'Praça Central', category: 'community', latitude: -23.5505, longitude: -46.6335 },
@@ -42,7 +43,7 @@ export const EventsSection = () => {
             ) : (
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {INITIAL_EVENTS.map(event => (
-                    <div key={event.id} className="bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-gray-100 dark:border-slate-700 overflow-hidden hover:shadow-md transition-all">
+                    <Card key={event.id} className="!p-0 overflow-hidden">
                         <div className="bg-primary/5 dark:bg-primary/10 p-6 flex flex-col items-center justify-center text-center">
                             <h3 className="text-xl font-bold text-primary dark:text-primary-light mb-2">{event.title}</h3>
                             <span className="text-xs font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400 bg-white dark:bg-slate-900 px-3 py-1 rounded-full">{event.category}</span>
@@ -65,7 +66,7 @@ export const EventsSection = () => {
                                 <Users size={18} /> Vou Participar
                             </button>
                         </div>
-                    </div>
+                    </Card>
                 ))}
                 </div>
             )}

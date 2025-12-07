@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useApp } from '../../contexts/AppContext';
 import { ServiceProvider, ServiceProviderType } from '../../types';
 import { Star, MapPin, MessageCircle, Heart, Award } from 'lucide-react';
+import { Card } from '../ui/Card';
 
 const SERVICE_TYPES: { id: ServiceProviderType; label: string }[] = [
   { id: 'diarista', label: 'Diaristas' },
@@ -92,7 +93,7 @@ export const ServiceProvidersView: React.FC = () => {
       {/* List */}
       <div className="grid grid-cols-1 gap-4">
         {filteredProviders.map(provider => (
-          <div key={provider.id} className="bg-white dark:bg-slate-800 p-5 rounded-xl shadow-sm border border-slate-100 dark:border-slate-700">
+          <Card key={provider.id}>
             <div className="flex justify-between items-start mb-3">
               <div className="flex items-center gap-3">
                 <div className="w-12 h-12 rounded-full bg-slate-200 dark:bg-slate-700 flex items-center justify-center text-xl font-bold text-slate-500 dark:text-slate-400">
@@ -152,7 +153,7 @@ export const ServiceProvidersView: React.FC = () => {
                  </a>
                )}
             </div>
-          </div>
+          </Card>
         ))}
         {filteredProviders.length === 0 && (
           <div className="text-center py-12 text-slate-500 dark:text-slate-400">

@@ -147,7 +147,7 @@ export const ChatSection: React.FC<ChatSectionProps> = ({ messages, onSendMessag
             <input
                 type="text"
                 className="flex-1 px-6 py-4 bg-gray-100 dark:bg-slate-800 border-2 border-transparent rounded-full focus:outline-none focus:bg-white dark:focus:bg-slate-900 focus:border-primary/50 dark:focus:border-primary/40 focus:shadow-lg transition-all placeholder-gray-400 dark:placeholder-gray-500 text-gray-800 dark:text-gray-100"
-                placeholder={currentUser ? `Mensagem em #${ROOMS.find(r => r.id === currentRoom)?.name}...` : "Entre para conversar..."}
+                placeholder="Escreva uma mensagem para o bairro..."
                 value={inputValue}
                 onChange={(e) => setInputValue(e.target.value)}
                 onKeyPress={handleKeyPress}

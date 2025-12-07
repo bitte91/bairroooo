@@ -4,56 +4,73 @@
 
 @layer base {
   :root {
-    /* Updated Color Palette for Accessibility and Modern Feel */
-    --color-primary: 79 70 229; /* Indigo 600 #4F46E5 */
-    --color-primary-dark: 67 56 202; /* Indigo 700 */
-    --color-primary-light: 165 180 252; /* Indigo 200 */
+    --background: 40 50% 97%; /* Cream-ish #fffbf0 converted approx */
+    --foreground: 145 0% 10%;
 
-    --color-bg-light: 248 250 252; /* Slate 50 */
-    --color-text-light: 15 23 42; /* Slate 900 */
+    --card: 0 0% 100%;
+    --card-foreground: 145 0% 10%;
 
-    --color-bg-dark: 15 23 42; /* Slate 900 */
-    --color-surface-dark: 30 41 59; /* Slate 800 */
-    --color-text-dark: 241 245 249; /* Slate 100 */
+    --popover: 0 0% 100%;
+    --popover-foreground: 145 0% 10%;
 
-    /* Typography Clamp for Responsiveness */
-    --fs-base: clamp(1rem, 2.5vw, 1.125rem);
-    --fs-h1: clamp(1.8rem, 5vw, 2.5rem);
-    --fs-h2: clamp(1.4rem, 4vw, 2rem);
-    --fs-h3: clamp(1.1rem, 3vw, 1.5rem);
+    --primary: 158 93% 30%; /* Emerald 600 approx */
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 24 95% 53%; /* Orange 500 */
+    --secondary-foreground: 0 0% 100%;
+
+    --muted: 210 40% 96.1%;
+    --muted-foreground: 215.4 16.3% 46.9%;
+
+    --accent: 210 40% 96.1%;
+    --accent-foreground: 222.2 47.4% 11.2%;
+
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 210 40% 98%;
+
+    --border: 214.3 31.8% 91.4%;
+    --input: 214.3 31.8% 91.4%;
+    --ring: 158 93% 30%;
+
+    --radius: 0.75rem;
   }
 
-  html {
-    font-size: 16px;
-    scroll-behavior: smooth;
-  }
+  .dark {
+    --background: 222.2 84% 4.9%;
+    --foreground: 210 40% 98%;
 
-  body {
-    @apply bg-slate-50 text-slate-900 dark:bg-slate-950 dark:text-slate-100 transition-colors duration-300;
-    font-size: var(--fs-base);
-    line-height: 1.6;
-  }
+    --card: 222.2 84% 4.9%;
+    --card-foreground: 210 40% 98%;
 
-  h1, h2, h3, h4, h5, h6 {
-    @apply font-heading font-bold text-slate-800 dark:text-white;
-  }
+    --popover: 222.2 84% 4.9%;
+    --popover-foreground: 210 40% 98%;
 
-  h1 { font-size: var(--fs-h1); }
-  h2 { font-size: var(--fs-h2); }
-  h3 { font-size: var(--fs-h3); }
+    --primary: 158 93% 30%;
+    --primary-foreground: 222.2 47.4% 11.2%;
 
-  /* Larger touch targets */
-  button, a {
-    @apply min-h-[44px] min-w-[44px] touch-manipulation;
+    --secondary: 24 95% 53%;
+    --secondary-foreground: 210 40% 98%;
+
+    --muted: 217.2 32.6% 17.5%;
+    --muted-foreground: 215 20.2% 65.1%;
+
+    --accent: 217.2 32.6% 17.5%;
+    --accent-foreground: 210 40% 98%;
+
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 210 40% 98%;
+
+    --border: 217.2 32.6% 17.5%;
+    --input: 217.2 32.6% 17.5%;
+    --ring: 212.7 26.8% 83.9%;
   }
 }
 
-@layer components {
-  .btn-primary {
-    @apply px-6 py-3 bg-indigo-600 text-white rounded-xl font-bold shadow-md hover:bg-indigo-700 transition-all active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed;
+@layer base {
+  * {
+    @apply border-border;
   }
-
-  .card {
-    @apply bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-700 p-6 transition-all hover:shadow-md;
+  body {
+    @apply bg-background text-foreground;
   }
 }

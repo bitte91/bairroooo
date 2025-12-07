@@ -1,17 +1,17 @@
 import React from 'react';
 import { useApp } from '../contexts/AppContext';
-import { Map, AlertTriangle, Briefcase, ShoppingBag, Heart, FileText } from 'lucide-react';
+import { Map, Shield, Briefcase, ShoppingBag, Heart, Users } from 'lucide-react';
 
 export const QuickAccess: React.FC = () => {
   const { setCurrentView } = useApp();
 
   const items = [
-    { icon: FileText, label: 'Avisos', onClick: () => { document.getElementById('news')?.scrollIntoView({ behavior: 'smooth' }); } },
-    { icon: Heart, label: 'Ajuda', onClick: () => { document.getElementById('solidarity')?.scrollIntoView({ behavior: 'smooth' }); } },
-    { icon: Briefcase, label: 'Serviços', onClick: () => setCurrentView('services') },
-    { icon: AlertTriangle, label: 'Alertas', onClick: () => { document.getElementById('solidarity')?.scrollIntoView({ behavior: 'smooth' }); } }, // Linking to solidarity/alerts section
+    { icon: ShoppingBag, label: 'Comércio', onClick: () => setCurrentView('business') },
+    { icon: Briefcase, label: 'Serviços', onClick: () => setCurrentView('providers') },
+    { icon: Shield, label: 'Segurança', onClick: () => setCurrentView('safety') },
+    { icon: Heart, label: 'Ajuda', onClick: () => { setCurrentView('safety'); setTimeout(() => document.getElementById('solidarity')?.scrollIntoView({ behavior: 'smooth' }), 100); } },
     { icon: Map, label: 'Mapa', onClick: () => setCurrentView('map') },
-    { icon: ShoppingBag, label: 'Comércio', onClick: () => { document.getElementById('posts')?.scrollIntoView({ behavior: 'smooth' }); } },
+    { icon: Users, label: 'Grupo', onClick: () => setCurrentView('safety') },
   ];
 
   return (
@@ -24,7 +24,7 @@ export const QuickAccess: React.FC = () => {
             onClick={item.onClick}
             className="flex flex-col items-center justify-center p-4 bg-white dark:bg-slate-800 rounded-xl shadow-sm hover:shadow-md transition-all hover:-translate-y-1 border border-slate-100 dark:border-slate-700"
           >
-            <div className="bg-primary/10 dark:bg-primary/20 p-3 rounded-full mb-2 text-primary dark:text-primary-light">
+            <div className="bg-teal-50 dark:bg-teal-900/20 p-3 rounded-full mb-2 text-teal-600 dark:text-teal-400">
               <item.icon size={24} />
             </div>
             <span className="text-sm font-medium text-slate-700 dark:text-slate-300">{item.label}</span>

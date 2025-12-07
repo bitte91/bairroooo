@@ -1,5 +1,5 @@
 import React from 'react';
-import { Home, Briefcase, Map, User, Menu } from 'lucide-react';
+import { Home, Briefcase, Map, User, Shield, ShoppingBag } from 'lucide-react';
 import { useApp } from '../contexts/AppContext';
 
 export const BottomNav: React.FC = () => {
@@ -7,8 +7,9 @@ export const BottomNav: React.FC = () => {
 
   const navItems = [
     { id: 'home', icon: Home, label: 'Início', view: 'home' },
-    { id: 'services', icon: Briefcase, label: 'Serviços', view: 'services' },
-    { id: 'map', icon: Map, label: 'Mapa', view: 'map' },
+    { id: 'business', icon: ShoppingBag, label: 'Comércio', view: 'business' },
+    { id: 'providers', icon: Briefcase, label: 'Serviços', view: 'providers' },
+    { id: 'safety', icon: Shield, label: 'Segurança', view: 'safety' },
     { id: 'profile', icon: User, label: 'Perfil', view: 'profile' },
   ];
 
@@ -23,23 +24,15 @@ export const BottomNav: React.FC = () => {
                     onClick={() => setCurrentView(item.view as any)}
                     className={`flex flex-col items-center justify-center w-full h-full transition-colors ${
                         isActive
-                        ? 'text-primary dark:text-primary-light'
-                        : 'text-slate-500 dark:text-slate-400 hover:text-primary dark:hover:text-primary-light'
+                        ? 'text-teal-600 dark:text-teal-400'
+                        : 'text-slate-500 dark:text-slate-400 hover:text-teal-600 dark:hover:text-teal-400'
                     }`}
                 >
-                    <item.icon size={24} className={isActive ? 'fill-current' : ''} />
-                    <span className="text-[10px] mt-1 font-medium">{item.label}</span>
+                    <item.icon size={22} className={isActive ? 'fill-teal-100 dark:fill-teal-900/30' : ''} strokeWidth={2.5} />
+                    <span className="text-[10px] mt-1 font-bold">{item.label}</span>
                 </button>
             );
         })}
-        {/* Menu item as a catch-all or for more options */}
-        <button
-            className="flex flex-col items-center justify-center w-full h-full text-slate-500 dark:text-slate-400 hover:text-primary dark:hover:text-primary-light"
-            onClick={() => { /* Open a drawer or menu modal? For now just log or scroll to top */ window.scrollTo({ top: 0, behavior: 'smooth' }); }}
-        >
-            <Menu size={24} />
-            <span className="text-[10px] mt-1 font-medium">Menu</span>
-        </button>
       </div>
     </div>
   );

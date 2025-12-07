@@ -12,12 +12,16 @@ import { PostType, AlertType } from './types';
 import { CheckCircle, AlertCircle, X } from 'lucide-react';
 import { SavedItems } from './components/SavedItems';
 import { EventsSection } from './components/EventsSection';
-import { ServiceDirectory } from './components/ServiceDirectory';
 import { UserProfile } from './components/UserProfile';
 import { QuickAccess } from './components/QuickAccess';
 import { MapView } from './components/MapView';
 import { BottomNav } from './components/BottomNav';
 import { Onboarding } from './components/Onboarding';
+
+// New Views
+import { BusinessDirectoryView } from './components/views/BusinessDirectoryView';
+import { ServiceProvidersView } from './components/views/ServiceProvidersView';
+import { SafetyAndSolidarityView } from './components/views/SafetyAndSolidarityView';
 
 export default function App() {
   const {
@@ -117,12 +121,18 @@ export default function App() {
               return <SavedItems />;
           case 'events':
               return <EventsSection />;
-          case 'services':
-              return <ServiceDirectory />;
+          case 'services': // Legacy/Redirect or keep for compatibility if linked elsewhere
+              return <ServiceProvidersView />;
           case 'map':
               return <MapView />;
           case 'profile':
               return <UserProfile />;
+          case 'business':
+              return <BusinessDirectoryView />;
+          case 'providers':
+              return <ServiceProvidersView />;
+          case 'safety':
+              return <SafetyAndSolidarityView />;
           case 'home':
           default:
               return (

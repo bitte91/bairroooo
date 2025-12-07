@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import { User, Post, Alert, Message, ToastNotification, PostType, AlertType, Favorite, Notification } from '../types';
+import { User, Post, Alert, Message, ToastNotification, PostType, AlertType, Favorite, Notification, Business, ServiceProvider, SafetyAlert, NeighborGroup } from '../types';
+import { MOCK_BUSINESSES, MOCK_SERVICE_PROVIDERS, MOCK_SAFETY_ALERTS, MOCK_NEIGHBOR_GROUPS } from './initialData';
 
 interface AppContextType {
   currentUser: string | null;
@@ -14,6 +15,18 @@ interface AppContextType {
 
   alerts: Alert[];
   addAlert: (alert: Alert) => void;
+
+  // New Data Models
+  businesses: Business[];
+  addBusiness: (business: Business) => void;
+
+  serviceProviders: ServiceProvider[];
+  addServiceProvider: (provider: ServiceProvider) => void;
+
+  safetyAlerts: SafetyAlert[];
+  addSafetyAlert: (alert: SafetyAlert) => void;
+
+  neighborGroups: NeighborGroup[];
 
   messages: Message[];
   addMessage: (message: Message) => void;
@@ -38,8 +51,9 @@ interface AppContextType {
   completeOnboarding: () => void;
 
   // Navigation State (Simple view switching)
-  currentView: 'home' | 'saved' | 'profile' | 'events' | 'services' | 'map';
-  setCurrentView: (view: 'home' | 'saved' | 'profile' | 'events' | 'services' | 'map') => void;
+  // Extended with new views
+  currentView: 'home' | 'saved' | 'profile' | 'events' | 'services' | 'map' | 'business' | 'providers' | 'safety';
+  setCurrentView: (view: 'home' | 'saved' | 'profile' | 'events' | 'services' | 'map' | 'business' | 'providers' | 'safety') => void;
 }
 
 const AppContext = createContext<AppContextType | undefined>(undefined);
@@ -49,11 +63,11 @@ const CENTER_LAT = -23.5505;
 const CENTER_LNG = -46.6333;
 
 const INITIAL_POSTS: Post[] = [
-  { id: 1, title: "Eletricista Residencial", desc: "Instalação de tomadas, chuveiros e reparos. Orçamento grátis.", author: "Carlos Ruiz", type: "autonomo", latitude: -23.5510, longitude: -46.6340 },
-  { id: 2, title: "Pães Artesanais - 20% OFF", desc: "Toda a linha de fermentação natural com desconto hoje.", author: "Padaria do Zé", type: "promocao", latitude: -23.5520, longitude: -46.6320 },
-  { id: 3, title: "Mercadinho da Esquina", desc: "Entregas gratuitas para compras acima de R$50 no bairro.", author: "Mercadinho Bom Dia", type: "comercio", latitude: -23.5490, longitude: -46.6350 },
-  { id: 4, title: "Aulas de Inglês", desc: "Aulas particulares para crianças e adolescentes. Primeira aula grátis.", author: "Ana Lima", type: "autonomo", latitude: -23.5500, longitude: -46.6310 },
-  { id: 5, title: "Balconista de Padaria", desc: "Vaga para período da manhã. Entregar currículo no local.", author: "Padaria do Zé", type: "vaga", latitude: -23.5520, longitude: -46.6320 }
+  { id: 1, title: "Eletricista Residencial", desc: "Instalação de tomadas, chuveiros e reparos. Orçamento grátis.", author: "Carlos Ruiz", type: "autonomo", latitude: -23.5510, longitude: -46.6340, serviceProviderId: 'sp1' },
+  { id: 2, title: "Pães Artesanais - 20% OFF", desc: "Toda a linha de fermentação natural com desconto hoje.", author: "Padaria do Zé", type: "promocao", latitude: -23.5520, longitude: -46.6320, businessId: 'b2' },
+  { id: 3, title: "Mercadinho da Esquina", desc: "Entregas gratuitas para compras acima de R$50 no bairro.", author: "Mercadinho Bom Dia", type: "comercio", latitude: -23.5490, longitude: -46.6350, businessId: 'b1' },
+  { id: 4, title: "Aulas de Inglês", desc: "Aulas particulares para crianças e adolescentes. Primeira aula grátis.", author: "Ana Lima", type: "autonomo", latitude: -23.5500, longitude: -46.6310, serviceProviderId: 'sp2' },
+  { id: 5, title: "Balconista de Padaria", desc: "Vaga para período da manhã. Entregar currículo no local.", author: "Padaria do Zé", type: "vaga", latitude: -23.5520, longitude: -46.6320, businessId: 'b2' }
 ];
 
 const INITIAL_ALERTS: Alert[] = [
@@ -70,14 +84,23 @@ const INITIAL_MESSAGES: Message[] = [
 export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [currentUser, setCurrentUser] = useState<string | null>(null);
   const [theme, setTheme] = useState<'light' | 'dark'>('light');
+
   const [posts, setPosts] = useState<Post[]>(INITIAL_POSTS);
   const [alerts, setAlerts] = useState<Alert[]>(INITIAL_ALERTS);
+
+  // New State
+  const [businesses, setBusinesses] = useState<Business[]>(MOCK_BUSINESSES);
+  const [serviceProviders, setServiceProviders] = useState<ServiceProvider[]>(MOCK_SERVICE_PROVIDERS);
+  const [safetyAlerts, setSafetyAlerts] = useState<SafetyAlert[]>(MOCK_SAFETY_ALERTS);
+  const [neighborGroups, setNeighborGroups] = useState<NeighborGroup[]>(MOCK_NEIGHBOR_GROUPS);
+
   const [messages, setMessages] = useState<Message[]>(INITIAL_MESSAGES);
   const [favorites, setFavorites] = useState<Favorite[]>([]);
   const [toasts, setToasts] = useState<ToastNotification[]>([]);
   const [notifications, setNotifications] = useState<Notification[]>([]);
   const [badges, setBadges] = useState<string[]>([]);
-  const [currentView, setCurrentView] = useState<'home' | 'saved' | 'profile' | 'events' | 'services' | 'map'>('home');
+
+  const [currentView, setCurrentView] = useState<'home' | 'saved' | 'profile' | 'events' | 'services' | 'map' | 'business' | 'providers' | 'safety'>('home');
   const [showOnboarding, setShowOnboarding] = useState(false);
 
   // Load from LocalStorage
@@ -142,6 +165,19 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
 
   const addAlert = (alert: Alert) => {
       setAlerts(prev => [alert, ...prev]);
+  };
+
+  // New adders
+  const addBusiness = (business: Business) => {
+    setBusinesses(prev => [business, ...prev]);
+  };
+
+  const addServiceProvider = (provider: ServiceProvider) => {
+    setServiceProviders(prev => [provider, ...prev]);
+  };
+
+  const addSafetyAlert = (alert: SafetyAlert) => {
+    setSafetyAlerts(prev => [alert, ...prev]);
   };
 
   const addMessage = (message: Message) => {
@@ -219,6 +255,13 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         addPost,
         alerts,
         addAlert,
+        businesses,
+        addBusiness,
+        serviceProviders,
+        addServiceProvider,
+        safetyAlerts,
+        addSafetyAlert,
+        neighborGroups,
         messages,
         addMessage,
         favorites,

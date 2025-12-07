@@ -8,19 +8,19 @@ export const Onboarding: React.FC = () => {
 
   const steps = [
     {
-      title: "Descubra o Bairro",
-      desc: "Encontre serviços locais, comércios e vagas de emprego bem pertinho de você.",
+      title: "Veja o que está acontecendo",
+      desc: "Fique por dentro das novidades, eventos e notícias do seu bairro em tempo real.",
       image: "https://images.unsplash.com/photo-1577083552431-6e5fd01988ec?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80"
     },
     {
-      title: "Ofertas e Promoções",
-      desc: "Fique por dentro das melhores ofertas e promoções exclusivas para vizinhos.",
-      image: "https://images.unsplash.com/photo-1607082348824-0a96f2a4b9da?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80"
+      title: "Peça ajuda e colabore",
+      desc: "Um espaço seguro para pedir ajuda, alertar sobre segurança e apoiar seus vizinhos.",
+      image: "https://images.unsplash.com/photo-1582213782179-e0d53f98f2ca?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80"
     },
     {
-      title: "Alertas e Ajuda",
-      desc: "Receba avisos importantes e ajude seus vizinhos em questões de segurança e solidariedade.",
-      image: "https://images.unsplash.com/photo-1582213782179-e0d53f98f2ca?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80"
+      title: "Conecte-se com o bairro",
+      desc: "Descubra serviços locais, eventos e tudo que o Bairro tem a oferecer.",
+      image: "https://images.unsplash.com/photo-1607082348824-0a96f2a4b9da?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80"
     }
   ];
 
@@ -75,16 +75,26 @@ export const Onboarding: React.FC = () => {
             </div>
 
             {/* Actions */}
-            <button
-                onClick={handleNext}
-                className="w-full py-3 bg-teal-600 hover:bg-teal-700 text-white font-semibold rounded-xl flex items-center justify-center gap-2 transition-all hover:scale-[1.02] active:scale-[0.98]"
-            >
-                {step === steps.length - 1 ? (
-                    <>Começar <Check size={20} /></>
-                ) : (
-                    <>Próximo <ChevronRight size={20} /></>
-                )}
-            </button>
+            <div className="flex gap-3">
+              {step > 0 && (
+                <button
+                  onClick={() => setStep(prev => prev - 1)}
+                  className="py-3 px-6 bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold rounded-xl transition-all"
+                >
+                  Voltar
+                </button>
+              )}
+              <button
+                  onClick={handleNext}
+                  className="flex-1 py-3 bg-teal-600 hover:bg-teal-700 text-white font-semibold rounded-xl flex items-center justify-center gap-2 transition-all hover:scale-[1.02] active:scale-[0.98]"
+              >
+                  {step === steps.length - 1 ? (
+                      <>Entrar no Conecta Bairro <Check size={20} /></>
+                  ) : (
+                      <>Próximo <ChevronRight size={20} /></>
+                  )}
+              </button>
+            </div>
         </div>
       </div>
     </div>

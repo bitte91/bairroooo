@@ -1,11 +1,8 @@
 import React, { useState } from 'react';
+import { Routes, Route, useLocation } from 'react-router-dom';
 import { useApp } from './contexts/AppContext';
 import { Header } from './components/Header';
-import { Hero } from './components/Hero';
-import { PostList } from './components/PostList';
-import { NewsSection } from './components/NewsSection';
-import { SolidaritySection } from './components/SolidaritySection';
-import { ChatSection } from './components/ChatSection';
+import { Home } from './components/Home';
 import { Footer } from './components/Footer';
 import { LoginModal, CreatePostModal } from './components/Modals';
 import { PostType, AlertType } from './types';
@@ -13,10 +10,10 @@ import { CheckCircle, AlertCircle, X } from 'lucide-react';
 import { SavedItems } from './components/SavedItems';
 import { EventsSection } from './components/EventsSection';
 import { UserProfile } from './components/UserProfile';
-import { QuickAccess } from './components/QuickAccess';
 import { MapView } from './components/MapView';
 import { BottomNav } from './components/BottomNav';
 import { Onboarding } from './components/Onboarding';
+import { ChatSection } from './components/ChatSection';
 
 // New Views
 import { BusinessDirectoryView } from './components/views/BusinessDirectoryView';
@@ -27,22 +24,33 @@ export default function App() {
   const {
     currentUser,
     loginUser,
-    posts,
     addPost,
-    alerts,
     addAlert,
-    messages,
     addMessage,
     toasts,
     removeToast,
     theme,
     toggleTheme,
-    currentView,
     setCurrentView,
     showOnboarding,
-    favorites
+    messages
   } = useApp();
   
+  const location = useLocation();
+
+  // Update currentView context based on route for backward compatibility (e.g. BottomNav highlighting)
+  React.useEffect(() => {
+    const path = location.pathname;
+    if (path === '/') setCurrentView('home');
+    else if (path === '/comercio') setCurrentView('business');
+    else if (path === '/servicos') setCurrentView('providers');
+    else if (path === '/seguranca') setCurrentView('safety');
+    else if (path === '/perfil') setCurrentView('profile');
+    else if (path === '/meus-lugares') setCurrentView('saved');
+    else if (path === '/eventos') setCurrentView('events');
+    else if (path === '/mapa') setCurrentView('map');
+  }, [location, setCurrentView]);
+
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
   const [isPostModalOpen, setIsPostModalOpen] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -114,106 +122,43 @@ export default function App() {
     addMessage(newMessage);
   };
 
-  // Render content based on currentView
-  const renderContent = () => {
-      switch(currentView) {
-          case 'saved':
-              return <SavedItems />;
-          case 'events':
-              return <EventsSection />;
-          case 'services': // Legacy/Redirect or keep for compatibility if linked elsewhere
-              return <ServiceProvidersView />;
-          case 'map':
-              return <MapView />;
-          case 'profile':
-              return <UserProfile />;
-          case 'business':
-              return <BusinessDirectoryView />;
-          case 'providers':
-              return <ServiceProvidersView />;
-          case 'safety':
-              return <SafetyAndSolidarityView />;
-          case 'home':
-          default:
-              return (
-                <>
-                    <Hero
-                    onOpenPostModal={() => openCreateModal('post')}
-                    />
-
-                    <QuickAccess />
-
-                    {/* Meus Lugares Preview - Only if has favorites */}
-                    {favorites.length > 0 && (
-                      <div className="mb-8 animate-fadeIn">
-                        <div className="flex items-center justify-between mb-4">
-                          <h2 className="text-xl font-bold text-slate-800 dark:text-white">Meus Lugares Favoritos</h2>
-                          <button
-                            onClick={() => setCurrentView('saved')}
-                            className="text-sm font-semibold text-teal-600 hover:text-teal-700 dark:text-teal-400"
-                          >
-                            Ver todos ({favorites.length})
-                          </button>
-                        </div>
-                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                            {favorites.slice(0, 3).map(fav => (
-                                <div key={fav.id} className="bg-white dark:bg-slate-800 p-4 rounded-xl shadow-sm border border-slate-100 dark:border-slate-700 flex items-center justify-between">
-                                    <div>
-                                        <span className="text-xs font-bold uppercase text-slate-400">{fav.itemType}</span>
-                                        <h3 className="font-semibold text-slate-800 dark:text-white line-clamp-1">{fav.title}</h3>
-                                    </div>
-                                    <button onClick={() => setCurrentView('saved')} className="p-2 text-teal-600 bg-teal-50 dark:bg-teal-900/30 rounded-lg">
-                                        ➔
-                                    </button>
-                                </div>
-                            ))}
-                        </div>
-                      </div>
-                    )}
-
-                    <div id="news" className="scroll-mt-24">
-                        <NewsSection />
-                    </div>
-
-                    <div id="solidarity" className="scroll-mt-24">
-                        <SolidaritySection
-                        alerts={alerts}
-                        onRequestHelp={() => openCreateModal('alert', 'ajuda')}
-                        />
-                    </div>
-
-                    <div id="posts" className="scroll-mt-24">
-                    <PostList posts={posts} />
-                    </div>
-
-                    <div id="chat" className="scroll-mt-24">
-                    <ChatSection
-                        messages={messages}
-                        onSendMessage={handleSendMessage}
-                        currentUser={currentUser}
-                        onRequireLogin={() => setIsLoginModalOpen(true)}
-                    />
-                    </div>
-                </>
-              );
-      }
-  };
-
   return (
     <div className={`min-h-screen flex flex-col font-sans text-gray-800 bg-slate-50 dark:bg-slate-950 dark:text-slate-100 transition-colors duration-300`}>
       <Header 
         scrollToId={(id) => {
-            setCurrentView('home');
-            setTimeout(() => {
-                document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });
-            }, 100);
+            // Keep this for now, but in future, navigation might handle this
+            const el = document.getElementById(id);
+            if (el) el.scrollIntoView({ behavior: 'smooth' });
         }}
         darkMode={theme === 'dark'}
         toggleTheme={toggleTheme}
       />
       
       <main className="flex-1 w-full max-w-[1200px] mx-auto px-5 py-6">
-        {renderContent()}
+        <Routes>
+          <Route path="/" element={
+            <Home
+              onOpenPostModal={() => openCreateModal('post')}
+              onOpenAlertModal={(mode, type) => openCreateModal(mode, type)}
+              onRequireLogin={() => setIsLoginModalOpen(true)}
+            />
+          } />
+          <Route path="/comercio" element={<BusinessDirectoryView />} />
+          <Route path="/servicos" element={<ServiceProvidersView />} />
+          <Route path="/seguranca" element={<SafetyAndSolidarityView />} />
+          <Route path="/perfil" element={<UserProfile />} />
+          <Route path="/meus-lugares" element={<SavedItems />} />
+          <Route path="/eventos" element={<EventsSection />} />
+          <Route path="/mapa" element={<MapView />} />
+          <Route path="/chat" element={
+             <ChatSection
+              messages={messages}
+              onSendMessage={handleSendMessage}
+              currentUser={currentUser}
+              onRequireLogin={() => setIsLoginModalOpen(true)}
+            />
+          } />
+        </Routes>
       </main>
 
       <Footer />

@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useApp } from '../../contexts/AppContext';
 import { Business, BusinessCategory } from '../../types';
 import { MapPin, Phone, Instagram, Clock, CreditCard, CheckCircle, Shield } from 'lucide-react';
+import { Card } from '../ui/Card';
 
 const CATEGORIES: { id: BusinessCategory; label: string; icon: string }[] = [
   { id: 'mercado', label: 'Mercados', icon: '🛒' },
@@ -76,10 +77,10 @@ export const BusinessDirectoryView: React.FC = () => {
       {/* List */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         {filteredBusinesses.map(business => (
-          <div
+          <Card
             key={business.id}
-            className="bg-white dark:bg-slate-800 p-5 rounded-xl shadow-sm border border-slate-100 dark:border-slate-700 hover:shadow-md transition-shadow cursor-pointer"
             onClick={() => setSelectedBusiness(business)}
+            className="hover:border-teal-300 dark:hover:border-teal-700"
           >
             <div className="flex justify-between items-start mb-2">
               <div className="flex gap-2">
@@ -110,7 +111,7 @@ export const BusinessDirectoryView: React.FC = () => {
                 </div>
               )}
             </div>
-          </div>
+          </Card>
         ))}
         {filteredBusinesses.length === 0 && (
           <div className="col-span-full text-center py-12 text-slate-500 dark:text-slate-400">

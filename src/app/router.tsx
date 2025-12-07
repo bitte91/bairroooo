@@ -5,6 +5,7 @@ import { Footer } from '../shared/components/layout/Footer';
 import { BottomNav } from '../shared/components/layout/BottomNav';
 import { useLocalStorage } from '../shared/hooks/useLocalStorage';
 import { HomeFeed } from '../features/home/components/HomeFeed';
+import { HomeDashboard } from '../features/home/components/HomeDashboard';
 import { ServiceList } from '../features/services/components/ServiceList';
 import { EventList } from '../features/events/components/EventList';
 import { SafetyView } from '../features/safety/components/SafetyView';
@@ -47,11 +48,11 @@ const Layout = () => {
 // Route Components
 const Home = () => (
     <div className="space-y-6">
-        <section className="bg-emerald-600 dark:bg-emerald-700 -mx-5 px-5 py-8 text-white mb-6">
+        <section className="bg-emerald-600 dark:bg-emerald-700 -mx-5 px-5 py-8 text-white mb-2">
             <h1 className="text-3xl font-bold mb-2">Olá, Vizinho!</h1>
             <p className="text-emerald-100">O que você está procurando hoje?</p>
-             {/* Quick Actions could go here */}
         </section>
+        <HomeDashboard />
         <HomeFeed />
     </div>
 );

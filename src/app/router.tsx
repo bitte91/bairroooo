@@ -9,6 +9,8 @@ import { CommercePage } from '../features/services/CommercePage';
 import { ServicesPage } from '../features/services/ServicesPage';
 import { ChatPage } from '../features/chat/ChatPage';
 import { MOCK_NEWS } from '../lib/mockData';
+import { InteractiveMap } from '../presentation/components/InteractiveMap';
+import { NeighborhoodList } from '../presentation/components/NeighborhoodList';
 
 // Layout Component
 const Layout = () => {
@@ -27,8 +29,25 @@ const Home = () => (
     <div className="pb-24">
         <HomeDashboard />
 
+        {/* Map Widget on Home */}
+        <div className="px-4 mt-6">
+            <h3 className="font-bold text-lg mb-2">Mapa do Bairro</h3>
+            <InteractiveMap locations={[
+                { id: '1', name: 'Centro Cultural', description: 'Espaço para eventos comunitários', latitude: -23.0257, longitude: -45.5559 },
+                { id: '2', name: 'Mercado Municipal', description: 'Produtos frescos locais', latitude: -23.0270, longitude: -45.5570 }
+            ]} />
+        </div>
+
+        {/* Neighborhood List Widget */}
+        <div className="px-4 mt-6">
+            <h3 className="font-bold text-lg mb-2">Bairros Atendidos</h3>
+            <div className="h-[200px] border border-border rounded-lg overflow-hidden">
+                <NeighborhoodList height={200} />
+            </div>
+        </div>
+
         {/* Recent News Widget on Home */}
-        <div className="px-4 mt-2">
+        <div className="px-4 mt-6">
             <div className="flex justify-between items-center mb-2">
                 <h3 className="font-bold text-lg">Últimas do Bairro</h3>
                 <span className="text-sm text-primary">Ver tudo</span>

@@ -4,27 +4,43 @@ import { cn } from '../../../../src/lib/cn';
 interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   error?: string;
   label?: string;
+  leftIcon?: React.ReactNode;
+  rightIcon?: React.ReactNode;
 }
 
 export const Input = React.forwardRef<HTMLInputElement, InputProps>(
-  ({ className, error, label, ...props }, ref) => {
+  ({ className, error, label, leftIcon, rightIcon, ...props }, ref) => {
     return (
       <div className="w-full">
         {label && (
-          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+          <label className="block text-sm font-medium text-foreground mb-1">
             {label}
           </label>
         )}
-        <input
-          ref={ref}
-          className={cn(
-            'flex h-10 w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent disabled:cursor-not-allowed disabled:opacity-50 dark:border-slate-700 dark:bg-slate-900 dark:text-white dark:placeholder:text-gray-500',
-            error && 'border-red-500 focus:ring-red-500',
-            className
-          )}
-          {...props}
-        />
-        {error && <p className="mt-1 text-xs text-red-500">{error}</p>}
+        <div className="relative">
+            {leftIcon && (
+                <div className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground">
+                    {leftIcon}
+                </div>
+            )}
+            <input
+              ref={ref}
+              className={cn(
+                'flex h-10 w-full rounded-full border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50',
+                leftIcon && 'pl-10',
+                rightIcon && 'pr-10',
+                error && 'border-destructive focus-visible:ring-destructive',
+                className
+              )}
+              {...props}
+            />
+            {rightIcon && (
+                <div className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground">
+                    {rightIcon}
+                </div>
+            )}
+        </div>
+        {error && <p className="mt-1 text-xs text-destructive">{error}</p>}
       </div>
     );
   }

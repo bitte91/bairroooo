@@ -1,17 +1,19 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
-import { ShoppingBag, Briefcase, Shield, Calendar, MessageCircle, Bookmark, Map } from 'lucide-react';
+import { Newspaper, ShoppingBag, Briefcase, Calendar } from 'lucide-react';
+import { cn } from '../../../lib/cn';
 
 interface DashboardCardProps {
   title: string;
   icon: React.ElementType;
   path: string;
-  color: string;
+  colorClass: string;
+  bgClass: string;
   delay: number;
 }
 
-const DashboardCard: React.FC<DashboardCardProps> = ({ title, icon: Icon, path, color, delay }) => {
+const DashboardCard: React.FC<DashboardCardProps> = ({ title, icon: Icon, path, colorClass, bgClass, delay }) => {
   const navigate = useNavigate();
 
   return (
@@ -19,35 +21,36 @@ const DashboardCard: React.FC<DashboardCardProps> = ({ title, icon: Icon, path, 
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.3, delay }}
-      whileHover={{ scale: 1.05 }}
-      whileTap={{ scale: 0.95 }}
+      whileHover={{ scale: 1.02 }}
+      whileTap={{ scale: 0.98 }}
       onClick={() => navigate(path)}
-      className={`flex flex-col items-center justify-center p-4 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-700 bg-white dark:bg-slate-800 ${color} bg-opacity-10 dark:bg-opacity-10 hover:shadow-md transition-shadow w-full aspect-square`}
+      className="flex flex-col items-center justify-center p-4 rounded-xl shadow-sm border border-border bg-card hover:shadow-md transition-shadow w-full aspect-square"
     >
-      <div className={`p-3 rounded-full mb-2 ${color.replace('text-', 'bg-').replace('600', '100')} dark:bg-opacity-20`}>
-        <Icon className={`w-8 h-8 ${color}`} strokeWidth={2} />
+      <div className={cn("p-4 rounded-full mb-3", bgClass)}>
+        <Icon className={cn("w-8 h-8", colorClass)} strokeWidth={2} />
       </div>
-      <span className="font-semibold text-sm text-slate-700 dark:text-slate-200">{title}</span>
+      <span className="font-semibold text-sm text-foreground">{title}</span>
     </motion.button>
   );
 };
 
 export const HomeDashboard: React.FC = () => {
+  // Matching Image 0 (unnamed.jpg): News, Commerce, Services, Agenda
   const sections = [
-    { title: 'Comércio', icon: ShoppingBag, path: '/comercio', color: 'text-blue-600' },
-    { title: 'Serviços', icon: Briefcase, path: '/servicos', color: 'text-emerald-600' },
-    { title: 'Segurança', icon: Shield, path: '/seguranca', color: 'text-red-600' },
-    { title: 'Eventos', icon: Calendar, path: '/eventos', color: 'text-amber-600' },
-    { title: 'Chat', icon: MessageCircle, path: '/chat', color: 'text-violet-600' },
-    { title: 'Salvos', icon: Bookmark, path: '/meus-lugares', color: 'text-pink-600' },
+    { title: 'Notícias', icon: Newspaper, path: '/noticias', colorClass: 'text-blue-600', bgClass: 'bg-blue-100' },
+    { title: 'Comércio', icon: ShoppingBag, path: '/comercio', colorClass: 'text-orange-600', bgClass: 'bg-orange-100' },
+    { title: 'Serviços', icon: Briefcase, path: '/servicos', colorClass: 'text-emerald-600', bgClass: 'bg-emerald-100' },
+    { title: 'Agenda', icon: Calendar, path: '/eventos', colorClass: 'text-purple-600', bgClass: 'bg-purple-100' },
   ];
 
   return (
-    <div className="py-4">
-      <div className="flex items-center justify-between mb-4 px-1">
-        <h2 className="text-lg font-bold text-slate-800 dark:text-slate-100">Explorar Bairro</h2>
+    <div className="py-6 px-4">
+      <div className="mb-6">
+        <h1 className="text-2xl font-serif font-bold text-primary mb-1">Bem-vindo à Conecta Vila</h1>
+        <p className="text-muted-foreground">O que você procura hoje?</p>
       </div>
-      <div className="grid grid-cols-3 gap-3 md:gap-4">
+
+      <div className="grid grid-cols-2 gap-4">
         {sections.map((section, index) => (
           <DashboardCard
             key={section.title}

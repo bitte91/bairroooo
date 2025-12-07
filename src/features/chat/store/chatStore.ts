@@ -1,14 +1,20 @@
 import { create } from 'zustand';
-import { Message, User } from '../../../shared/types';
+import { Message } from '../../../shared/types';
+
+export interface Conversation {
+    id: string;
+    participantName: string;
+    lastMessage?: string;
+    unreadCount?: number;
+}
 
 interface ChatState {
-  conversations: any[]; // Define Conversation type properly later
+  conversations: Conversation[];
   activeConversationId: string | null;
   messages: Record<string, Message[]>; // conversationId -> messages
 
   setActiveConversation: (id: string | null) => void;
   addMessage: (conversationId: string, message: Message) => void;
-  // ... other actions
 }
 
 export const useChatStore = create<ChatState>((set) => ({

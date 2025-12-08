@@ -25,18 +25,20 @@ export interface Alert {
   timestamp: string;
 }
 
-export type BusinessCategory = 'mercado' | 'padaria' | 'restaurante' | 'farmacia' | 'pet' | 'servico' | 'outros';
+export type BusinessCategory = 'mercado' | 'padaria' | 'restaurante' | 'farmacia' | 'pet' | 'servico' | 'salao' | 'outros';
+export type BusinessStatus = 'pending' | 'approved' | 'rejected';
 
 export interface Business {
   id: string;
   name: string;
   category: BusinessCategory;
   description: string;
-  address: string;
+  address: string; // rua + bairro (sem número)
   bairro: string;
   latitude?: number;
   longitude?: number;
-  whatsapp?: string;
+  whatsapp?: string; // keeping for backward compatibility/preference
+  phone: string;     // Generic phone contact
   instagram?: string;
   openingHours?: string;
   paymentMethods?: string[];
@@ -44,6 +46,10 @@ export interface Business {
   highlights?: string[];
   isVerified?: boolean;
   isSafetyPartner?: boolean;
+  status: BusinessStatus;
+  createdAt: string;    // ISO
+  updatedAt: string;    // ISO
+  isOwner?: boolean;
 }
 
 export type ServiceProviderType = 'diarista' | 'eletricista' | 'encanador' | 'aulaparticular' | 'cuidado_idosos' | 'passeador_pets' | 'chaveiro' | 'outros';

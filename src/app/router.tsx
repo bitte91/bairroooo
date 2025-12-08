@@ -11,6 +11,9 @@ import { ChatPage } from '../features/chat/ChatPage';
 import { MOCK_NEWS } from '../lib/mockData';
 import { InteractiveMap } from '../presentation/components/InteractiveMap';
 import { NeighborhoodList } from '../presentation/components/NeighborhoodList';
+import BusinessList from '../presentation/pages/Businesses/BusinessList';
+import BusinessForm from '../presentation/pages/Businesses/BusinessForm';
+import BusinessAdmin from '../presentation/pages/Admin/BusinessAdmin';
 
 // Layout Component
 const Layout = () => {
@@ -80,6 +83,9 @@ export const AppRouter = () => {
         <Route path="/chat" element={<ChatPage />} />
         <Route path="/perfil" element={<ProfilePage />} />
         <Route path="/comercio" element={<CommercePage />} />
+        <Route path="/comercios" element={<BusinessList />} />
+        <Route path="/comercios/novo" element={<BusinessForm />} />
+        <Route path="/admin/comercios" element={<BusinessAdmin />} />
         <Route path="/servicos" element={<ServicesPage />} />
 
         <Route path="*" element={<div className="p-4 text-center">Página não encontrada</div>} />

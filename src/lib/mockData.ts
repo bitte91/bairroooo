@@ -1,4 +1,4 @@
-import { Business, ServiceProvider, SafetyAlert, NeighborGroup, NewsItem, Event } from '../shared/types';
+import { Business, ServiceProvider, SafetyAlert, NeighborGroup, NewsItem, Event } from '../domain/types';
 
 export const MOCK_BUSINESSES: Business[] = [
   {
@@ -11,11 +11,15 @@ export const MOCK_BUSINESSES: Business[] = [
     latitude: -23.5490,
     longitude: -46.6350,
     whatsapp: '5512999999999',
+    phone: '(12) 99999-9999',
     openingHours: 'Seg-Sáb 08:00 - 20:00',
     paymentMethods: ['Cartão', 'Pix', 'Dinheiro'],
     delivery: true,
     isVerified: true,
-    isSafetyPartner: true
+    isSafetyPartner: true,
+    status: 'approved',
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString()
   },
   {
     id: 'b2',
@@ -27,9 +31,13 @@ export const MOCK_BUSINESSES: Business[] = [
     latitude: -23.5520,
     longitude: -46.6320,
     whatsapp: '5512988888888',
+    phone: '(12) 98888-8888',
     openingHours: 'Todos os dias 06:00 - 22:00',
     highlights: ['Pão na chapa', 'Cafezinho'],
-    isVerified: true
+    isVerified: true,
+    status: 'approved',
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString()
   },
   {
     id: 'b3',
@@ -39,9 +47,13 @@ export const MOCK_BUSINESSES: Business[] = [
     address: 'Rua do Comércio, 789',
     bairro: 'Centro',
     whatsapp: '5512977777777',
+    phone: '(12) 97777-7777',
     openingHours: '24 horas',
     delivery: true,
-    isSafetyPartner: true
+    isSafetyPartner: true,
+    status: 'approved',
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString()
   }
 ];
 

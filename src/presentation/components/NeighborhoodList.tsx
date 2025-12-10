@@ -1,6 +1,6 @@
 import React, { memo } from 'react';
 import * as ReactWindow from 'react-window';
-import { useBairroStore } from '@/src/application/stores/useBairroStore';
+import { useBairroStore } from '../../application/stores/useBairroStore';
 
 // Safe import handling without 'any'
 interface ReactWindowModule {

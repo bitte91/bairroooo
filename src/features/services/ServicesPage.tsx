@@ -81,39 +81,28 @@ export const ServicesPage: React.FC = () => {
             filteredServices.map((service) => (
             <Card key={service.id} className="overflow-hidden border-none shadow-sm bg-card">
                 <div className="p-4">
-                <div className="flex justify-between items-start mb-2">
-                    <div className="flex items-center gap-2">
-                         <div className="h-10 w-10 rounded-full bg-emerald-100 flex items-center justify-center text-emerald-700 font-bold">
+                <div className="flex justify-between items-start mb-3">
+                    <div className="flex items-center gap-3">
+                         <div className="h-12 w-12 rounded-full bg-emerald-100 flex items-center justify-center text-emerald-700 font-bold overflow-hidden border-2 border-white shadow-sm">
+                             {/* Placeholder for avatar if available, or initials */}
                              {service.name.substring(0,2).toUpperCase()}
                          </div>
                         <div>
-                            <h3 className="font-bold text-lg leading-tight">{service.name}</h3>
-                            <span className="text-xs text-muted-foreground capitalize">{service.serviceType}</span>
+                            <h3 className="font-bold text-base leading-tight">{service.name}</h3>
+                            <span className="text-xs text-primary font-medium uppercase">{service.serviceType}</span>
                         </div>
                     </div>
                     {service.rating && (
-                        <div className="flex items-center gap-1 bg-yellow-50 px-1.5 py-0.5 rounded text-yellow-700 text-xs font-bold">
+                        <div className="flex items-center gap-1 bg-yellow-50 px-2 py-1 rounded-full text-yellow-700 text-xs font-bold">
                             <Star className="h-3 w-3 fill-yellow-500 text-yellow-500" />
                             {service.rating}
                         </div>
                     )}
                 </div>
 
-                <p className="text-sm text-muted-foreground mb-3 line-clamp-2">{service.description}</p>
+                <p className="text-sm text-muted-foreground mb-4 line-clamp-3 bg-muted/30 p-2 rounded-lg italic">"{service.description}"</p>
 
-                <div className="flex flex-col gap-1.5 text-xs text-muted-foreground mb-4">
-                    <div className="flex items-center gap-1.5">
-                        <MapPin className="h-3.5 w-3.5 text-primary" />
-                        <span>{service.bairro} • Atende até {service.radiusKm}km</span>
-                    </div>
-                     {service.isRecommendedByNeighbors && (
-                         <div className="text-emerald-600 font-medium">
-                             ✓ Recomendado por vizinhos
-                         </div>
-                     )}
-                </div>
-
-                <div className="flex gap-2">
+                <div className="flex gap-2 mt-2">
                     {service.whatsapp && (
                         <Button
                             className="flex-1 bg-green-600 hover:bg-green-700 text-white h-9"
@@ -123,8 +112,8 @@ export const ServicesPage: React.FC = () => {
                             WhatsApp
                         </Button>
                     )}
-                    <Button variant="outline" className="flex-1 h-9">
-                        Perfil
+                    <Button variant="outline" className="flex-1 h-9 text-blue-600 border-blue-200 hover:bg-blue-50">
+                        Ver Perfil
                     </Button>
                 </div>
                 </div>

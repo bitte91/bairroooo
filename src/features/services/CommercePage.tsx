@@ -80,53 +80,52 @@ export const CommercePage: React.FC = () => {
         ) : (
             filteredBusinesses.map((business) => (
             <Card key={business.id} className="overflow-hidden border-none shadow-sm bg-card">
-                <div className="p-4">
-                <div className="flex justify-between items-start mb-2">
-                    <div>
-                        <h3 className="font-bold text-lg leading-tight">{business.name}</h3>
-                        <span className="text-xs text-muted-foreground capitalize">{business.category}</span>
+                <div className="flex">
+                    {/* Left: Image */}
+                    <div className="w-1/3 bg-muted relative">
+                        <img
+                           src={business.imageUrl || 'https://images.unsplash.com/photo-1534723452862-4c874018d66d?auto=format&fit=crop&q=80&w=200'}
+                           alt={business.name}
+                           className="h-full w-full object-cover absolute inset-0"
+                        />
                     </div>
-                    {business.isVerified && (
-                        <Badge variant="active" className="text-[10px] px-1.5 py-0.5 h-auto">Verificado</Badge>
-                    )}
-                </div>
+                    {/* Right: Content */}
+                    <div className="w-2/3 p-4 flex flex-col justify-between">
+                         <div>
+                            <div className="flex justify-between items-start mb-1">
+                                <h3 className="font-bold text-base leading-tight line-clamp-1">{business.name}</h3>
+                            </div>
+                             <span className="text-xs text-primary font-bold uppercase mb-2 block">{business.category}</span>
 
-                <p className="text-sm text-muted-foreground mb-3 line-clamp-2">{business.description}</p>
+                            <div className="flex flex-col gap-1 text-xs text-muted-foreground mb-3">
+                                <div className="flex items-center gap-1 line-clamp-1">
+                                    <MapPin className="h-3 w-3 text-muted-foreground shrink-0" />
+                                    <span>{business.address}, {business.bairro}</span>
+                                </div>
+                                {business.delivery && (
+                                     <div className="flex items-center gap-1 text-blue-600 font-medium">
+                                        <ShoppingBag className="h-3 w-3 shrink-0" />
+                                        <span>Faz entregas</span>
+                                     </div>
+                                )}
+                            </div>
+                         </div>
 
-                <div className="flex flex-col gap-1.5 text-xs text-muted-foreground mb-4">
-                    <div className="flex items-center gap-1.5">
-                        <MapPin className="h-3.5 w-3.5 text-primary" />
-                        <span>{business.address}, {business.bairro}</span>
-                    </div>
-                    {business.openingHours && (
-                        <div className="flex items-center gap-1.5">
-                            <span className="font-medium text-foreground">Aberto:</span> {business.openingHours}
+                        <div className="flex gap-2 mt-2">
+                            {business.whatsapp && (
+                                <Button
+                                    className="flex-1 bg-green-600 hover:bg-green-700 text-white h-8 text-xs px-0"
+                                    onClick={() => window.open(`https://wa.me/${business.whatsapp}`, '_blank')}
+                                >
+                                    WhatsApp
+                                </Button>
+                            )}
+                            <Button variant="outline" className="flex-1 h-8 text-xs px-0 text-blue-600 border-blue-200 hover:bg-blue-50">
+                                Ver Detalhes
+                            </Button>
                         </div>
-                    )}
-                </div>
-
-                <div className="flex gap-2">
-                    {business.whatsapp && (
-                        <Button
-                            className="flex-1 bg-green-600 hover:bg-green-700 text-white h-9"
-                            onClick={() => window.open(`https://wa.me/${business.whatsapp}`, '_blank')}
-                        >
-                            <Phone className="h-4 w-4 mr-2" />
-                            WhatsApp
-                        </Button>
-                    )}
-                    <Button variant="outline" className="flex-1 h-9">
-                        Ver Detalhes
-                    </Button>
-                </div>
-                </div>
-                {business.delivery && (
-                    <div className="bg-blue-50 px-4 py-1.5 border-t border-blue-100">
-                        <p className="text-[10px] text-blue-700 font-medium flex items-center justify-center gap-1">
-                            <ShoppingBag className="h-3 w-3" /> Faz entregas
-                        </p>
                     </div>
-                )}
+                </div>
             </Card>
             ))
         )}

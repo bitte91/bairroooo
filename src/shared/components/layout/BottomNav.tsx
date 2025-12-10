@@ -20,7 +20,7 @@ export const BottomNav: React.FC = () => {
             key={item.id}
             to={item.path}
             className={({ isActive }) => cn(
-              "flex flex-col items-center justify-center w-full h-full transition-colors",
+              "flex flex-col items-center justify-center w-full h-full transition-all active:scale-90",
               isActive
                 ? 'text-primary'
                 : 'text-muted-foreground hover:text-primary'

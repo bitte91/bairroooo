@@ -22,13 +22,17 @@ const DashboardCard: React.FC<DashboardCardProps> = ({ title, icon: Icon, path, 
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.3, delay }}
       whileHover={{ scale: 1.02 }}
-      whileTap={{ scale: 0.98 }}
+      whileTap={{ scale: 0.96 }}
       onClick={() => navigate(path)}
-      className="flex flex-col items-center justify-center p-4 rounded-xl shadow-sm border border-border bg-card hover:shadow-md transition-shadow w-full aspect-square"
+      className="flex flex-col items-center justify-center p-4 rounded-xl shadow-sm border border-border bg-card hover:shadow-lg transition-all w-full aspect-square active:shadow-sm"
     >
-      <div className={cn("p-4 rounded-full mb-3", bgClass)}>
+      <motion.div 
+        className={cn("p-4 rounded-full mb-3", bgClass)}
+        whileHover={{ rotate: [0, -10, 10, -10, 0] }}
+        transition={{ duration: 0.5 }}
+      >
         <Icon className={cn("w-8 h-8", colorClass)} strokeWidth={2} />
-      </div>
+      </motion.div>
       <span className="font-semibold text-sm text-foreground">{title}</span>
     </motion.button>
   );

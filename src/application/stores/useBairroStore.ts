@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import { bairroRepository } from '@/src/infrastructure/repositories/BairroRepository';
+import { bairroRepository } from '../../infrastructure/repositories/BairroRepository';
 
 interface BairroState {
   bairros: string[];

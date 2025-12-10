@@ -1,8 +1,9 @@
 import React from 'react';
 import { Button } from '../../shared/components/ui/Button';
 import { Card } from '../../shared/components/ui/Card';
-import { Settings, Newspaper, Calendar, Lightbulb, ChevronRight, LogOut, ArrowLeft } from 'lucide-react';
+import { Settings, Newspaper, Calendar, Lightbulb, ChevronRight, LogOut, ArrowLeft, Moon } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import { ThemeToggle } from '../../shared/components/ui/ThemeToggle';
 
 export const ProfilePage: React.FC = () => {
     const navigate = useNavigate();
@@ -66,11 +67,17 @@ export const ProfilePage: React.FC = () => {
                         { label: "Privacidade e Segurança", icon: null },
                         { label: "Notificações", icon: null },
                     ].map((item, i) => (
-                        <div key={item.label} className={`flex items-center justify-between p-4 ${i !== 2 ? 'border-b border-muted' : ''} active:bg-muted/50 cursor-pointer`}>
+                        <div key={item.label} className="flex items-center justify-between p-4 border-b border-muted active:bg-muted/50 cursor-pointer">
                             <span className="text-sm font-medium">{item.label}</span>
                             <ChevronRight className="h-5 w-5 text-muted-foreground" />
                         </div>
                     ))}
+                    <div className="flex items-center justify-between p-4 active:bg-muted/50 cursor-pointer">
+                         <div className="flex items-center gap-2">
+                            <span className="text-sm font-medium">Modo Escuro</span>
+                         </div>
+                         <ThemeToggle />
+                    </div>
                 </div>
 
                 <Button variant="ghost" className="w-full mt-6 text-red-600 hover:text-red-700 hover:bg-red-50 flex items-center justify-center gap-2">

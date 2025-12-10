@@ -15,6 +15,7 @@ interface ChatState {
 
   setActiveConversation: (id: string | null) => void;
   addMessage: (conversationId: string, message: Message) => void;
+  createConversation: (conversation: Conversation) => void;
 }
 
 export const useChatStore = create<ChatState>((set) => ({
@@ -22,10 +23,34 @@ export const useChatStore = create<ChatState>((set) => ({
   activeConversationId: null,
   messages: {},
   setActiveConversation: (id) => set({ activeConversationId: id }),
-  addMessage: (conversationId, message) => set((state) => ({
-    messages: {
+  createConversation: (conversation) => set((state) => {
+    if (state.conversations.some(c => c.id === conversation.id)) {
+        return state;
+    }
+    return { conversations: [...state.conversations, conversation] };
+  }),
+  addMessage: (conversationId, message) => set((state) => {
+    // Update messages map
+    const newMessages = {
       ...state.messages,
       [conversationId]: [...(state.messages[conversationId] || []), message]
-    }
-  }))
+    };
+
+    // Update conversation lastMessage
+    const updatedConversations = state.conversations.map(c => {
+        if (c.id === conversationId) {
+            return {
+                ...c,
+                lastMessage: message.text,
+                unreadCount: (c.unreadCount || 0) + 1 // Simple increment logic
+            };
+        }
+        return c;
+    });
+
+    return {
+      messages: newMessages,
+      conversations: updatedConversations
+    };
+  })
 }));

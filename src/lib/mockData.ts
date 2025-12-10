@@ -16,7 +16,9 @@ export const MOCK_BUSINESSES: Business[] = [
     delivery: true,
     highlights: ['Bloomin Onion', 'Costela', 'Happy Hour'],
     isVerified: true,
-    isSafetyPartner: false
+    isSafetyPartner: false,
+    featured: true,
+    promoMessage: 'Happy hour com 2 porções + chopp em dobro'
   },
   {
     id: 'b2',
@@ -32,7 +34,9 @@ export const MOCK_BUSINESSES: Business[] = [
     paymentMethods: ['Cartão', 'Dinheiro'],
     delivery: true,
     highlights: ['Camarão Internacional', 'Frutos do Mar', 'Vinhos'],
-    isVerified: true
+    isVerified: true,
+    featured: true,
+    promoMessage: 'Cardápio executivo no almoço com sobremesa inclusa'
   },
   {
     id: 'b3',
@@ -48,7 +52,8 @@ export const MOCK_BUSINESSES: Business[] = [
     paymentMethods: ['Cartão', 'Pix'],
     delivery: true,
     highlights: ['Chopp Artesanal', 'Petiscos', 'Música ao Vivo'],
-    isVerified: true
+    isVerified: true,
+    promoMessage: 'Clube do growler com 20% de cashback'
   },
   {
     id: 'b4',
@@ -63,7 +68,8 @@ export const MOCK_BUSINESSES: Business[] = [
     openingHours: 'Todos os dias 11:00 - 23:00',
     paymentMethods: ['Cartão', 'Dinheiro'],
     highlights: ['Chopp Pinguim', 'Comida Alemã'],
-    isVerified: true
+    isVerified: true,
+    promoMessage: 'Rodízio de petiscos nas quartas'
   },
   {
     id: 'b5',
@@ -80,6 +86,59 @@ export const MOCK_BUSINESSES: Business[] = [
     delivery: true,
     highlights: ['Sobremesas', 'Cafés', 'Almoço'],
     isVerified: true
+  },
+  {
+    id: 'b6',
+    name: 'Mercadinho do Zé',
+    category: 'mercado',
+    description: 'Mercado de bairro com hortifruti fresco, açougue e itens de conveniência.',
+    address: 'Rua das Laranjeiras, 120',
+    bairro: 'Quiririm',
+    whatsapp: '5512988888888',
+    openingHours: 'Todos os dias 08:00 - 21:00',
+    delivery: true,
+    highlights: ['Entrega rápida', 'Produtos locais', 'Ofertas do dia'],
+    promoMessage: 'Lista de compras via WhatsApp e entrega no mesmo dia'
+  },
+  {
+    id: 'b7',
+    name: 'Padaria Nuvem Doce',
+    category: 'padaria',
+    description: 'Pães artesanais de fermentação natural, brunch de fim de semana e café especial.',
+    address: 'Rua das Acácias, 45',
+    bairro: 'Jardim das Flores',
+    whatsapp: '5512977777777',
+    openingHours: 'Seg-Sáb 07:00 - 20:00',
+    highlights: ['Croissant de amêndoas', 'Café especial', 'Brunch'],
+    featured: true,
+    promoMessage: 'Assinatura semanal de pães com 10% de desconto'
+  },
+  {
+    id: 'b8',
+    name: 'Farmácia Bem+ Saúde',
+    category: 'farmacia',
+    description: 'Entrega de medicamentos 24h, teste de glicemia e aferição de pressão no local.',
+    address: 'Av. Independência, 501',
+    bairro: 'Centro',
+    whatsapp: '5512966666666',
+    openingHours: '24 horas',
+    delivery: true,
+    highlights: ['Plantão 24h', 'Entrega expressa', 'Atendimento consultório'],
+    promoMessage: 'Programa de descontos para receitas de uso contínuo'
+  },
+  {
+    id: 'b9',
+    name: 'Pet Wash & Care',
+    category: 'pet',
+    description: 'Banho e tosa humanizado, táxi pet e plano mensal para cães e gatos.',
+    address: 'Rua do Bosque, 88',
+    bairro: 'Residencial Primavera',
+    whatsapp: '5512955555555',
+    openingHours: 'Ter-Dom 09:00 - 19:00',
+    delivery: true,
+    highlights: ['Táxi pet', 'Tosa especializada', 'Clube mensal'],
+    featured: true,
+    promoMessage: 'Primeiro banho com 15% off + avaliação gratuita'
   }
 ];
 
@@ -94,7 +153,8 @@ export const MOCK_SERVICE_PROVIDERS: ServiceProvider[] = [
     radiusKm: 10,
     rating: 4.8,
     reviewsCount: 42,
-    isRecommendedByNeighbors: true
+    isRecommendedByNeighbors: true,
+    headline: 'Emergências elétricas 24h'
   },
   {
     id: 'sp2',
@@ -105,7 +165,8 @@ export const MOCK_SERVICE_PROVIDERS: ServiceProvider[] = [
     bairro: 'Jardim das Rosas',
     rating: 5.0,
     reviewsCount: 15,
-    isSolidary: true
+    isSolidary: true,
+    headline: 'Aulas personalizadas com material próprio'
   },
   {
     id: 'sp3',
@@ -117,7 +178,8 @@ export const MOCK_SERVICE_PROVIDERS: ServiceProvider[] = [
     rating: 4.9,
     reviewsCount: 88,
     isRecommendedByNeighbors: true,
-    isSolidary: true
+    isSolidary: true,
+    headline: 'Pacotes semanais e diárias avulsas'
   }
 ];
 

@@ -1,9 +1,9 @@
 import React from 'react';
 import { Card } from '../../shared/components/ui/Card';
 import { Button } from '../../shared/components/ui/Button';
-import { MapPin, Phone, Star, Search, Filter, ShoppingBag, Clock } from 'lucide-react';
+import { MapPin, Phone, Star, Search, Filter, ShoppingBag, Clock, Sparkles, Megaphone, Heart } from 'lucide-react';
 import { Input } from '../../shared/components/ui/Input';
-import { MOCK_BUSINESSES } from '../../lib/mockData';
+import { MOCK_BUSINESSES, MOCK_SERVICE_PROVIDERS } from '../../lib/mockData';
 import { Badge } from '../../shared/components/ui/Badge';
 import { useNavigate } from 'react-router-dom';
 import { ArrowLeft } from 'lucide-react';
@@ -24,6 +24,7 @@ export const CommercePage: React.FC = () => {
   const [searchTerm, setSearchTerm] = React.useState('');
   const [selectedCategory, setSelectedCategory] = React.useState<string | null>(null);
   const [isLoading, setIsLoading] = React.useState(true);
+  const [showOnlyOpen, setShowOnlyOpen] = React.useState(false);
 
   // Simular carregamento inicial
   React.useEffect(() => {
@@ -33,11 +34,17 @@ export const CommercePage: React.FC = () => {
 
   const categories = Array.from(new Set(MOCK_BUSINESSES.map(b => b.category)));
 
+  const featuredBusinesses = MOCK_BUSINESSES.filter((b) => b.featured);
+  const recommendedProviders = MOCK_SERVICE_PROVIDERS
+    .filter((p) => p.isRecommendedByNeighbors || p.isSolidary)
+    .slice(0, 3);
+
   const filteredBusinesses = MOCK_BUSINESSES.filter(b => {
     const matchesSearch = b.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
                           b.description.toLowerCase().includes(searchTerm.toLowerCase());
     const matchesCategory = selectedCategory ? b.category === selectedCategory : true;
-    return matchesSearch && matchesCategory;
+    const matchesOpen = showOnlyOpen ? isBusinessOpen(b.openingHours) : true;
+    return matchesSearch && matchesCategory && matchesOpen;
   });
 
   return (
@@ -67,12 +74,16 @@ export const CommercePage: React.FC = () => {
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
           />
-           <Button 
-             variant="ghost" 
-             size="icon" 
-             className="shrink-0 transition-transform active:scale-95"
+           <Button
+             variant="ghost"
+             size="icon"
+             className={cn(
+              "shrink-0 transition-transform active:scale-95",
+              showOnlyOpen ? 'text-primary' : 'text-muted-foreground'
+             )}
+             onClick={() => setShowOnlyOpen((prev) => !prev)}
            >
-               <Filter className="h-5 w-5 text-muted-foreground" />
+               <Filter className="h-5 w-5" />
            </Button>
         </div>
 
@@ -96,6 +107,91 @@ export const CommercePage: React.FC = () => {
             ))}
         </div>
       </div>
+
+      {/* CTA para comerciantes e autônomos */}
+      <div className="p-4">
+        <Card className="bg-gradient-to-r from-emerald-600 to-teal-600 text-white overflow-hidden border-none shadow-lg">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 items-center">
+            <div className="flex items-start gap-3 md:col-span-2">
+              <Sparkles className="h-10 w-10" />
+              <div>
+                <p className="text-xs uppercase tracking-[0.2em] font-semibold">Visibilidade imediata</p>
+                <h2 className="text-2xl font-bold mt-1">Divulgue seu negócio ou serviço no bairro</h2>
+                <p className="text-sm text-emerald-50 mt-2">
+                  Cadastre sua loja, coloque seu WhatsApp e apareça para os vizinhos que estão buscando soluções locais.
+                </p>
+              </div>
+            </div>
+            <div className="flex flex-col gap-2 md:items-end">
+              <Button
+                className="bg-white text-emerald-700 hover:bg-emerald-50 font-semibold"
+                onClick={() => window.open('https://wa.me/5511999999999?text=Quero%20cadastrar%20meu%20neg%C3%B3cio%20no%20app%20do%20bairro', '_blank')}
+              >
+                Quero cadastrar meu negócio
+              </Button>
+              <Button
+                variant="ghost"
+                className="text-white hover:bg-white/10"
+                onClick={() => window.open('https://wa.me/5511999999999?text=Sou%20aut%C3%B4nomo%20e%20quero%20oferecer%20meus%20servi%C3%A7os', '_blank')}
+              >
+                Sou autônomo e quero oferecer serviços
+              </Button>
+            </div>
+          </div>
+        </Card>
+      </div>
+
+      {/* Destaques */}
+      {featuredBusinesses.length > 0 && (
+        <div className="p-4">
+          <div className="flex items-center justify-between mb-3">
+            <div className="flex items-center gap-2">
+              <Sparkles className="h-5 w-5 text-amber-500" />
+              <h2 className="font-serif font-bold text-lg">Escolhas dos Vizinhos</h2>
+            </div>
+            <Badge variant="secondary" className="bg-amber-100 text-amber-700 border-amber-200">
+              Destaque
+            </Badge>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+            {featuredBusinesses.map((business) => (
+              <Card
+                key={business.id}
+                className="flex gap-3 items-center border border-amber-100 bg-amber-50/60"
+              >
+                <div className="h-20 w-24 rounded-lg overflow-hidden bg-muted">
+                  <img
+                    src={business.imageUrl || 'https://images.unsplash.com/photo-1534723452862-4c874018d66d?auto=format&fit=crop&q=80&w=600'}
+                    alt={business.name}
+                    className="h-full w-full object-cover"
+                  />
+                </div>
+                <div className="flex-1">
+                  <div className="flex items-center gap-2 mb-1">
+                    <Badge variant="secondary" className="uppercase text-[10px] tracking-wide">
+                      {business.category}
+                    </Badge>
+                    {business.isVerified && (
+                      <span className="text-[11px] font-semibold text-emerald-700">✓ Verificado</span>
+                    )}
+                  </div>
+                  <h3 className="font-semibold leading-tight">{business.name}</h3>
+                  <p className="text-xs text-muted-foreground line-clamp-2">{business.promoMessage || business.description}</p>
+                  {business.highlights && (
+                    <div className="flex flex-wrap gap-1 mt-2">
+                      {business.highlights.slice(0, 3).map((highlight) => (
+                        <Badge key={highlight} variant="outline" className="text-[11px]">
+                          {highlight}
+                        </Badge>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              </Card>
+            ))}
+          </div>
+        </div>
+      )}
 
       {/* List */}
       <div className="p-4 space-y-4">
@@ -122,9 +218,9 @@ export const CommercePage: React.FC = () => {
           // Business Cards - Novo Layout Vertical
           filteredBusinesses.map((business) => {
             const isOpen = isBusinessOpen(business.openingHours);
-            
+
             return (
-              <Card 
+              <Card
                 key={business.id} 
                 className="overflow-hidden border-none shadow-sm bg-card transition-all hover:shadow-md active:scale-[0.98] cursor-pointer"
               >
@@ -158,10 +254,17 @@ export const CommercePage: React.FC = () => {
                       </div>
                     )}
                   </div>
-                  
+
                   <span className="text-xs text-primary font-bold uppercase mb-2 block">
                     {business.category}
                   </span>
+
+                  {business.promoMessage && (
+                    <div className="flex items-center gap-2 bg-emerald-50 text-emerald-700 text-xs font-semibold px-3 py-2 rounded-lg mb-3">
+                      <Megaphone className="h-4 w-4" />
+                      <span>{business.promoMessage}</span>
+                    </div>
+                  )}
 
                   <p className="text-sm text-muted-foreground mb-3 line-clamp-2">
                     {business.description}
@@ -184,7 +287,7 @@ export const CommercePage: React.FC = () => {
                         </span>
                       </div>
                     )}
-                    
+
                     {business.delivery && (
                       <div className="flex items-center gap-2 text-blue-600 font-medium">
                         <ShoppingBag className="h-4 w-4 shrink-0" />
@@ -218,6 +321,60 @@ export const CommercePage: React.FC = () => {
             );
           })
         )}
+      </div>
+
+      {/* Autônomos em destaque */}
+      <div className="p-4">
+        <div className="flex items-center justify-between mb-3">
+          <div className="flex items-center gap-2">
+            <Heart className="h-5 w-5 text-rose-500" />
+            <h2 className="font-serif font-bold text-lg">Autônomos recomendados</h2>
+          </div>
+          <Badge variant="secondary">Indicação dos vizinhos</Badge>
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+          {recommendedProviders.map((provider) => (
+            <Card key={provider.id} className="border border-rose-100 bg-rose-50/40">
+              <div className="p-4">
+                <div className="flex justify-between items-start">
+                  <div>
+                    <Badge className="mb-2 capitalize">{provider.serviceType}</Badge>
+                    <h3 className="font-semibold text-lg leading-tight">{provider.name}</h3>
+                    {provider.headline && (
+                      <p className="text-sm text-muted-foreground mt-1">{provider.headline}</p>
+                    )}
+                  </div>
+                  {provider.rating && (
+                    <div className="flex items-center gap-1 text-amber-600 font-semibold bg-white px-2 py-1 rounded-full shadow-sm">
+                      <Star className="h-4 w-4 fill-amber-500" />
+                      <span>{provider.rating}</span>
+                      {provider.reviewsCount && (
+                        <span className="text-xs text-muted-foreground">({provider.reviewsCount})</span>
+                      )}
+                    </div>
+                  )}
+                </div>
+
+                <p className="text-sm text-muted-foreground mt-2 line-clamp-2">{provider.description}</p>
+                <div className="mt-3 flex flex-wrap gap-2 text-xs text-muted-foreground">
+                  <Badge variant="outline">Atende {provider.bairro}</Badge>
+                  {provider.radiusKm && <Badge variant="outline">Até {provider.radiusKm} km</Badge>}
+                  {provider.isSolidary && <Badge variant="outline">Serviço solidário</Badge>}
+                </div>
+
+                <div className="mt-4 flex gap-2">
+                  <Button className="flex-1" variant="secondary" onClick={() => window.open(`https://wa.me/${provider.whatsapp}`, '_blank')}>
+                    <Phone className="h-4 w-4 mr-2" />
+                    Chamar no WhatsApp
+                  </Button>
+                  {provider.isRecommendedByNeighbors && (
+                    <Badge className="bg-emerald-600 text-white">Top bairro</Badge>
+                  )}
+                </div>
+              </div>
+            </Card>
+          ))}
+        </div>
       </div>
     </div>
   );

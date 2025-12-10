@@ -38,12 +38,15 @@ export interface Business {
   longitude?: number;
   whatsapp?: string;
   instagram?: string;
+  imageUrl?: string;
   openingHours?: string;
   paymentMethods?: string[];
   delivery?: boolean;
   highlights?: string[];
   isVerified?: boolean;
   isSafetyPartner?: boolean;
+  featured?: boolean;
+  promoMessage?: string;
 }
 
 export type ServiceProviderType = 'diarista' | 'eletricista' | 'encanador' | 'aulaparticular' | 'cuidado_idosos' | 'passeador_pets' | 'chaveiro' | 'outros';
@@ -61,6 +64,7 @@ export interface ServiceProvider {
   reviewsCount?: number;
   isSolidary?: boolean;
   isRecommendedByNeighbors?: boolean;
+  headline?: string;
 }
 
 export type AlertCategory = 'seguranca' | 'pet' | 'ajuda' | 'objeto_perdido' | 'informativo';

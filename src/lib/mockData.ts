@@ -167,13 +167,14 @@ export const MOCK_NEIGHBOR_GROUPS: NeighborGroup[] = [
 ];
 
 export const MOCK_NEWS: NewsItem[] = [
-    {
+    { 
         id: 1,
         title: "Inauguração da Horta Comunitária!",
         source: "Conecta Vila",
         time: "Há 2 horas",
         imageUrl: "https://images.unsplash.com/photo-1592419044706-39796d40f98c?auto=format&fit=crop&q=80&w=800",
-        link: "#"
+        link: "#",
+        category: "Eventos"
     },
     {
         id: 2,
@@ -181,7 +182,8 @@ export const MOCK_NEWS: NewsItem[] = [
         source: "Prefeitura",
         time: "Ontem",
         imageUrl: "https://images.unsplash.com/photo-1510596713412-56030c252371?auto=format&fit=crop&q=80&w=800",
-        link: "#"
+        link: "#",
+        category: "Melhorias"
     },
     {
         id: 3,
@@ -189,7 +191,8 @@ export const MOCK_NEWS: NewsItem[] = [
         source: "Associação de Moradores",
         time: "23 Out",
         imageUrl: "https://images.unsplash.com/photo-1517466787929-bc90951d0974?auto=format&fit=crop&q=80&w=800",
-        link: "#"
+        link: "#",
+        category: "Local"
     }
 ];
 

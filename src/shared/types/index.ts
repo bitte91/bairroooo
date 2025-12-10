@@ -95,6 +95,7 @@ export interface NewsItem {
   time: string;
   imageUrl: string;
   link: string;
+  category: 'Eventos' | 'Segurança' | 'Melhorias' | 'Local';
 }
 
 export interface Message {

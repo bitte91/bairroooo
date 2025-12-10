@@ -16,6 +16,12 @@ export const NewsFeed: React.FC = () => {
     const [searchTerm, setSearchTerm] = React.useState('');
     const [selectedCategory, setSelectedCategory] = React.useState(0);
 
+    const normalizeValue = (value: string) =>
+        value
+            .normalize('NFD')
+            .replace(/[\u0300-\u036f]/g, '')
+            .toLowerCase();
+
     // Simular carregamento inicial
     React.useEffect(() => {
         const timer = setTimeout(() => setIsLoading(false), 800);
@@ -23,9 +29,13 @@ export const NewsFeed: React.FC = () => {
     }, []);
 
     const filteredNews = MOCK_NEWS.filter(item => {
-        const matchesSearch = searchTerm === '' || 
+        const matchesSearch = searchTerm === '' ||
             item.title.toLowerCase().includes(searchTerm.toLowerCase());
-        return matchesSearch;
+        const activeCategory = CATEGORIES[selectedCategory];
+        const matchesCategory = normalizeValue(activeCategory) === 'todas'
+            ? true
+            : normalizeValue(item.category) === normalizeValue(activeCategory);
+        return matchesSearch && matchesCategory;
     });
 
     return (

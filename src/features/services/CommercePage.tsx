@@ -24,6 +24,10 @@ export const CommercePage: React.FC = () => {
   const [searchTerm, setSearchTerm] = React.useState('');
   const [selectedCategory, setSelectedCategory] = React.useState<string | null>(null);
   const [isLoading, setIsLoading] = React.useState(true);
+  const [isFilterOpen, setIsFilterOpen] = React.useState(false);
+  const [onlyDelivery, setOnlyDelivery] = React.useState(false);
+  const [onlyOpenNow, setOnlyOpenNow] = React.useState(false);
+  const [onlyVerified, setOnlyVerified] = React.useState(false);
 
   // Simular carregamento inicial
   React.useEffect(() => {
@@ -37,7 +41,10 @@ export const CommercePage: React.FC = () => {
     const matchesSearch = b.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
                           b.description.toLowerCase().includes(searchTerm.toLowerCase());
     const matchesCategory = selectedCategory ? b.category === selectedCategory : true;
-    return matchesSearch && matchesCategory;
+    const matchesDelivery = !onlyDelivery || b.delivery;
+    const matchesOpenNow = !onlyOpenNow || isBusinessOpen(b.openingHours);
+    const matchesVerified = !onlyVerified || b.isVerified;
+    return matchesSearch && matchesCategory && matchesDelivery && matchesOpenNow && matchesVerified;
   });
 
   return (
@@ -61,20 +68,67 @@ export const CommercePage: React.FC = () => {
 
         <div className="flex gap-2 mb-3">
           <Input
-            placeholder="Buscar lojas, produtos..."
+           placeholder="Buscar lojas, produtos..."
             leftIcon={<Search className="h-4 w-4" />}
             className="bg-muted/50 border-none transition-shadow focus-within:shadow-md"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
           />
-           <Button 
-             variant="ghost" 
-             size="icon" 
+           <Button
+             variant="ghost"
+             size="icon"
              className="shrink-0 transition-transform active:scale-95"
+             onClick={() => setIsFilterOpen((prev) => !prev)}
            >
                <Filter className="h-5 w-5 text-muted-foreground" />
            </Button>
         </div>
+
+        {isFilterOpen && (
+          <div className="mb-3 p-3 rounded-xl border border-border bg-muted/40 space-y-2">
+            <p className="text-xs font-semibold text-muted-foreground">Filtros rápidos</p>
+            <div className="flex flex-wrap gap-2">
+              <Button
+                variant={onlyDelivery ? 'default' : 'outline'}
+                size="sm"
+                className="text-xs"
+                onClick={() => setOnlyDelivery((prev) => !prev)}
+              >
+                Entrega
+              </Button>
+              <Button
+                variant={onlyOpenNow ? 'default' : 'outline'}
+                size="sm"
+                className="text-xs"
+                onClick={() => setOnlyOpenNow((prev) => !prev)}
+              >
+                Aberto agora
+              </Button>
+              <Button
+                variant={onlyVerified ? 'default' : 'outline'}
+                size="sm"
+                className="text-xs"
+                onClick={() => setOnlyVerified((prev) => !prev)}
+              >
+                Verificados
+              </Button>
+            </div>
+            <div className="flex justify-end">
+              <Button
+                variant="ghost"
+                size="sm"
+                className="text-xs"
+                onClick={() => {
+                  setOnlyDelivery(false);
+                  setOnlyOpenNow(false);
+                  setOnlyVerified(false);
+                }}
+              >
+                Limpar filtros
+              </Button>
+            </div>
+          </div>
+        )}
 
         <div className="flex gap-2 overflow-x-auto pb-1 no-scrollbar -mx-4 px-4">
             <Badge

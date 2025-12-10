@@ -15,6 +15,9 @@ export const NewsFeed: React.FC = () => {
     const [isLoading, setIsLoading] = React.useState(true);
     const [searchTerm, setSearchTerm] = React.useState('');
     const [selectedCategory, setSelectedCategory] = React.useState(0);
+    const [isFilterOpen, setIsFilterOpen] = React.useState(false);
+    const [selectedSource, setSelectedSource] = React.useState<string>('Todas');
+    const [sortOrder, setSortOrder] = React.useState<'recente' | 'alfabetica'>('recente');
 
     // Simular carregamento inicial
     React.useEffect(() => {
@@ -22,10 +25,27 @@ export const NewsFeed: React.FC = () => {
         return () => clearTimeout(timer);
     }, []);
 
+    const NEWS_CATEGORY_MAP: Record<number, string> = {
+        1: 'Local',
+        2: 'Melhorias',
+        3: 'Eventos',
+    };
+
+    const sources = React.useMemo(() => ['Todas', ...Array.from(new Set(MOCK_NEWS.map(item => item.source)))], []);
+
     const filteredNews = MOCK_NEWS.filter(item => {
-        const matchesSearch = searchTerm === '' || 
+        const matchesSearch = searchTerm === '' ||
             item.title.toLowerCase().includes(searchTerm.toLowerCase());
-        return matchesSearch;
+        const matchesCategory = selectedCategory === 0 || NEWS_CATEGORY_MAP[item.id] === CATEGORIES[selectedCategory];
+        const matchesSource = selectedSource === 'Todas' || item.source === selectedSource;
+        return matchesSearch && matchesCategory && matchesSource;
+    });
+
+    const sortedNews = [...filteredNews].sort((a, b) => {
+        if (sortOrder === 'alfabetica') {
+            return a.title.localeCompare(b.title);
+        }
+        return b.id - a.id;
     });
 
     return (
@@ -47,14 +67,70 @@ export const NewsFeed: React.FC = () => {
                         value={searchTerm}
                         onChange={(e) => setSearchTerm(e.target.value)}
                     />
-                    <Button 
-                        variant="ghost" 
-                        size="icon" 
+                    <Button
+                        variant="ghost"
+                        size="icon"
                         className="shrink-0 transition-transform active:scale-95"
+                        onClick={() => setIsFilterOpen((prev) => !prev)}
                     >
                         <Filter className="h-5 w-5 text-muted-foreground" />
                     </Button>
                 </div>
+
+                {isFilterOpen && (
+                    <div className="mb-3 p-3 rounded-xl border border-border bg-muted/40 space-y-3">
+                        <div>
+                            <p className="text-xs font-semibold text-muted-foreground mb-2">Ordenar por</p>
+                            <div className="flex gap-2">
+                                {[
+                                    { value: 'recente', label: 'Mais recentes' },
+                                    { value: 'alfabetica', label: 'A-Z' },
+                                ].map(option => (
+                                    <Button
+                                        key={option.value}
+                                        variant={sortOrder === option.value ? 'default' : 'outline'}
+                                        size="sm"
+                                        className="text-xs"
+                                        onClick={() => setSortOrder(option.value as 'recente' | 'alfabetica')}
+                                    >
+                                        {option.label}
+                                    </Button>
+                                ))}
+                            </div>
+                        </div>
+
+                        <div>
+                            <p className="text-xs font-semibold text-muted-foreground mb-2">Fonte</p>
+                            <div className="flex gap-2 flex-wrap">
+                                {sources.map((source) => (
+                                    <Badge
+                                        key={source}
+                                        variant={selectedSource === source ? 'active' : 'secondary'}
+                                        className="cursor-pointer"
+                                        onClick={() => setSelectedSource(source)}
+                                    >
+                                        {source}
+                                    </Badge>
+                                ))}
+                            </div>
+                        </div>
+
+                        <div className="flex justify-end">
+                            <Button
+                                variant="ghost"
+                                size="sm"
+                                className="text-xs"
+                                onClick={() => {
+                                    setSelectedSource('Todas');
+                                    setSortOrder('recente');
+                                    setSelectedCategory(0);
+                                }}
+                            >
+                                Limpar filtros
+                            </Button>
+                        </div>
+                    </div>
+                )}
 
                 <div className="flex gap-2 overflow-x-auto pb-1 no-scrollbar -mx-4 px-4">
                     {CATEGORIES.map((cat, i) => (
@@ -79,7 +155,7 @@ export const NewsFeed: React.FC = () => {
                         <NewsCardSkeleton />
                         <NewsCardSkeleton />
                     </>
-                ) : filteredNews.length === 0 ? (
+                ) : sortedNews.length === 0 ? (
                     // Empty State
                     <EmptyState
                         icon={Newspaper}
@@ -89,7 +165,7 @@ export const NewsFeed: React.FC = () => {
                         onAction={() => setSearchTerm('')}
                     />
                 ) : (
-                    filteredNews.map((item) => (
+                    sortedNews.map((item) => (
                         <Card 
                             key={item.id} 
                             className="overflow-hidden flex flex-col border-none shadow-sm bg-card transition-all hover:shadow-md active:scale-[0.98] cursor-pointer"

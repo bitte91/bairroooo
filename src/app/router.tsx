@@ -11,11 +11,18 @@ import { ChatPage } from '../features/chat/ChatPage';
 import { MOCK_NEWS } from '../lib/mockData';
 import { InteractiveMap } from '../presentation/components/InteractiveMap';
 import { NeighborhoodList } from '../presentation/components/NeighborhoodList';
+import { ThemeToggle } from '../shared/components/ui/ThemeToggle';
 
 // Layout Component
 const Layout = () => {
   return (
     <div className="min-h-screen flex flex-col font-sans bg-background text-foreground">
+      <div className="fixed top-4 right-4 z-40">
+        <div className="bg-card/90 backdrop-blur border border-border rounded-full px-3 py-2 shadow-lg flex items-center gap-2">
+          <span className="text-xs font-medium text-muted-foreground">Tema</span>
+          <ThemeToggle />
+        </div>
+      </div>
       <main className="flex-1 w-full mx-auto md:max-w-md bg-background">
         <Outlet />
       </main>

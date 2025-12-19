@@ -12,6 +12,7 @@ import { MOCK_NEWS } from '../lib/mockData';
 import { InteractiveMap } from '../presentation/components/InteractiveMap';
 import { NeighborhoodList } from '../presentation/components/NeighborhoodList';
 import { ThemeToggle } from '../shared/components/ui/ThemeToggle';
+import { HomeFeed } from '../features/home/components/HomeFeed';
 
 // Layout Component
 const Layout = () => {
@@ -73,6 +74,11 @@ const Home = () => (
                      </div>
                  ))}
              </div>
+        </div>
+
+        {/* Main Feed */}
+        <div className="px-4 mt-6">
+             <HomeFeed />
         </div>
     </div>
 );

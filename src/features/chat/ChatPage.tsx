@@ -2,10 +2,15 @@ import React from 'react';
 import { useChatStore } from './store/chatStore';
 import { Card } from '../../shared/components/ui/Card';
 import { MessageSquare, User } from 'lucide-react';
+import { ChatView } from './components/ChatView';
 
 export const ChatPage: React.FC = () => {
     // Basic implementation for now, connecting to the store structure
-    const { conversations } = useChatStore();
+    const { conversations, activeConversationId } = useChatStore();
+
+    if (activeConversationId) {
+        return <ChatView />;
+    }
 
     return (
         <div className="pb-24 min-h-screen bg-muted/20 flex flex-col items-center justify-center p-4">

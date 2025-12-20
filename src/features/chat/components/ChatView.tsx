@@ -63,7 +63,12 @@ export const ChatView: React.FC = () => {
                         </p>
                     </div>
                 </div>
-                 <Button variant="ghost" size="sm" onClick={() => useChatStore.getState().setActiveConversation(null)}>
+                 <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => useChatStore.getState().setActiveConversation(null)}
+                    aria-label="Voltar para lista de conversas"
+                 >
                     Voltar
                  </Button>
             </div>
@@ -105,8 +110,14 @@ export const ChatView: React.FC = () => {
                         value={inputValue}
                         onChange={(e) => setInputValue(e.target.value)}
                         className="flex-1"
+                        aria-label="Digite sua mensagem"
                     />
-                    <Button type="submit" size="icon" disabled={!inputValue.trim()}>
+                    <Button
+                        type="submit"
+                        size="icon"
+                        disabled={!inputValue.trim()}
+                        aria-label="Enviar mensagem"
+                    >
                         <Send className="w-5 h-5" />
                     </Button>
                 </form>

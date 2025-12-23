@@ -1,14 +1,14 @@
 import React from 'react';
-import { Home, Newspaper, Calendar, MessageSquare, User } from 'lucide-react';
+import { Home, MapPin, Calendar, MessageSquare, User } from 'lucide-react';
 import { NavLink } from 'react-router-dom';
 import { cn } from '../../../lib/cn';
 
 export const BottomNav: React.FC = () => {
   const navItems = [
-    { id: 'home', icon: Home, label: 'Início', path: '/' },
-    { id: 'news', icon: Newspaper, label: 'Notícias', path: '/noticias' },
-    { id: 'events', icon: Calendar, label: 'Eventos', path: '/eventos' },
+    { id: 'home', icon: Home, label: 'Feed', path: '/' },
+    { id: 'map', icon: MapPin, label: 'Mapa', path: '/mapa' },
     { id: 'chat', icon: MessageSquare, label: 'Chat', path: '/chat' },
+    { id: 'events', icon: Calendar, label: 'Eventos', path: '/eventos' },
     { id: 'profile', icon: User, label: 'Perfil', path: '/perfil' },
   ];
 
@@ -20,7 +20,7 @@ export const BottomNav: React.FC = () => {
             key={item.id}
             to={item.path}
             className={({ isActive }) => cn(
-              "flex flex-col items-center justify-center w-full h-full transition-all active:scale-90",
+              "flex flex-col items-center justify-center w-full h-full transition-all active:scale-95",
               isActive
                 ? 'text-primary'
                 : 'text-muted-foreground hover:text-primary'
@@ -32,7 +32,7 @@ export const BottomNav: React.FC = () => {
                   size={24}
                   className={cn(
                       isActive ? 'fill-current' : '',
-                      "transition-all"
+                      "transition-all duration-300"
                   )}
                   strokeWidth={isActive ? 2.5 : 2}
                   aria-label={item.label}

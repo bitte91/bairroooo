@@ -10,10 +10,10 @@ import { ServicesPage } from '../features/services/ServicesPage';
 import { ChatPage } from '../features/chat/ChatPage';
 import { MOCK_NEWS } from '../lib/mockData';
 import { InteractiveMap } from '../presentation/components/InteractiveMap';
-import { NeighborhoodList } from '../presentation/components/NeighborhoodList';
 import { ThemeToggle } from '../shared/components/ui/ThemeToggle';
+import { OnboardingPage } from '../features/onboarding/OnboardingPage';
 
-// Layout Component
+// Layout Component (Contains BottomNav)
 const Layout = () => {
   return (
     <div className="min-h-screen flex flex-col font-sans bg-background text-foreground">
@@ -31,44 +31,39 @@ const Layout = () => {
   );
 };
 
+// Map Page Component
+const MapPage = () => (
+    <div className="h-screen w-full relative">
+        <div className="absolute top-0 left-0 right-0 z-10 p-4 bg-gradient-to-b from-background to-transparent pointer-events-none">
+            <h1 className="text-2xl font-bold text-foreground drop-shadow-md">Mapa do Bairro</h1>
+        </div>
+        <InteractiveMap locations={[
+            { id: '1', name: 'Centro Cultural', description: 'Espaço para eventos comunitários', latitude: -23.0257, longitude: -45.5559 },
+            { id: '2', name: 'Mercado Municipal', description: 'Produtos frescos locais', latitude: -23.0270, longitude: -45.5570 },
+            { id: '3', name: 'Parque da Cidade', description: 'Área verde e lazer', latitude: -23.0300, longitude: -45.5600 }
+        ]} />
+    </div>
+);
+
 // Route Components
 const Home = () => (
     <div className="pb-24">
         <HomeDashboard />
 
-        {/* Map Widget on Home */}
         <div className="px-4 mt-6">
-            <h3 className="font-bold text-lg mb-2">Mapa do Bairro</h3>
-            <InteractiveMap locations={[
-                { id: '1', name: 'Centro Cultural', description: 'Espaço para eventos comunitários', latitude: -23.0257, longitude: -45.5559 },
-                { id: '2', name: 'Mercado Municipal', description: 'Produtos frescos locais', latitude: -23.0270, longitude: -45.5570 }
-            ]} />
-        </div>
-
-        {/* Neighborhood List Widget */}
-        <div className="px-4 mt-6">
-            <h3 className="font-bold text-lg mb-2">Bairros Atendidos</h3>
-            <div className="h-[200px] border border-border rounded-lg overflow-hidden">
-                <NeighborhoodList height={200} />
-            </div>
-        </div>
-
-        {/* Recent News Widget on Home */}
-        <div className="px-4 mt-6">
-            <div className="flex justify-between items-center mb-2">
-                <h3 className="font-bold text-lg">Últimas do Bairro</h3>
-                <span className="text-sm text-primary">Ver tudo</span>
-            </div>
-             <div className="space-y-3">
-                 {MOCK_NEWS.slice(0, 2).map((item) => (
-                    <div key={item.id} className="bg-card p-3 rounded-xl border border-border flex gap-3 shadow-sm">
-                         <div className="h-20 w-20 bg-muted rounded-lg shrink-0 overflow-hidden">
+             <div className="flex justify-between items-center mb-4">
+                 <h3 className="font-bold text-lg">Feed da Comunidade</h3>
+             </div>
+             <div className="space-y-4">
+                 {MOCK_NEWS.map((item) => (
+                    <div key={item.id} className="bg-card rounded-xl border border-border shadow-sm overflow-hidden">
+                         <div className="h-40 w-full bg-muted">
                              <img src={item.imageUrl} className="h-full w-full object-cover" alt={item.title}/>
                          </div>
-                         <div>
-                             <span className="text-xs text-secondary font-bold uppercase">{item.source}</span>
-                             <h4 className="font-bold text-sm leading-tight">{item.title}</h4>
-                             <p className="text-xs text-muted-foreground mt-1 line-clamp-2">{item.time}</p>
+                         <div className="p-4">
+                             <span className="text-xs text-primary font-bold uppercase mb-2 block">{item.source}</span>
+                             <h4 className="font-bold text-lg leading-tight mb-2">{item.title}</h4>
+                             <p className="text-sm text-muted-foreground mb-3">{item.time}</p>
                          </div>
                      </div>
                  ))}
@@ -80,8 +75,11 @@ const Home = () => (
 export const AppRouter = () => {
   return (
     <Routes>
+      <Route path="/onboarding" element={<OnboardingPage />} />
+
       <Route element={<Layout />}>
         <Route path="/" element={<Home />} />
+        <Route path="/mapa" element={<MapPage />} />
         <Route path="/noticias" element={<NewsFeed />} />
         <Route path="/eventos" element={<EventsPage />} />
         <Route path="/chat" element={<ChatPage />} />

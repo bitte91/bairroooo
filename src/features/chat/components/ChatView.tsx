@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { useChatStore } from '../store/chatStore';
 import { Message } from '../../../shared/types';
 import { Button } from '../../../shared/components/ui/Button';
@@ -8,6 +8,11 @@ import { Send, User } from 'lucide-react';
 export const ChatView: React.FC = () => {
     const { activeConversationId, messages, addMessage } = useChatStore();
     const [inputValue, setInputValue] = useState('');
+    const messagesEndRef = useRef<HTMLDivElement>(null);
+
+    const scrollToBottom = () => {
+        messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+    };
 
     // Mock initial view if no active conversation
     if (!activeConversationId) {
@@ -32,6 +37,10 @@ export const ChatView: React.FC = () => {
     }
 
     const currentMessages = messages[activeConversationId] || [];
+
+    useEffect(() => {
+        scrollToBottom();
+    }, [currentMessages]);
 
     const handleSend = () => {
         if (!inputValue.trim()) return;
@@ -63,7 +72,12 @@ export const ChatView: React.FC = () => {
                         </p>
                     </div>
                 </div>
-                 <Button variant="ghost" size="sm" onClick={() => useChatStore.getState().setActiveConversation(null)}>
+                 <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => useChatStore.getState().setActiveConversation(null)}
+                    aria-label="Voltar para lista de conversas"
+                >
                     Voltar
                  </Button>
             </div>
@@ -92,6 +106,7 @@ export const ChatView: React.FC = () => {
                         </div>
                     );
                 })}
+                <div ref={messagesEndRef} />
             </div>
 
             {/* Input Area */}
@@ -102,11 +117,17 @@ export const ChatView: React.FC = () => {
                 >
                     <Input
                         placeholder="Digite sua mensagem..."
+                        aria-label="Digite sua mensagem"
                         value={inputValue}
                         onChange={(e) => setInputValue(e.target.value)}
                         className="flex-1"
                     />
-                    <Button type="submit" size="icon" disabled={!inputValue.trim()}>
+                    <Button
+                        type="submit"
+                        size="icon"
+                        disabled={!inputValue.trim()}
+                        aria-label="Enviar mensagem"
+                    >
                         <Send className="w-5 h-5" />
                     </Button>
                 </form>

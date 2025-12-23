@@ -69,6 +69,7 @@ export const CommercePage: React.FC = () => {
         <div className="flex gap-2 mb-3">
           <Input
             placeholder="Buscar lojas, produtos..."
+            helperText="Dica: Tente buscar por 'Pizza', 'Farmácia' ou 'Mercado'"
             leftIcon={<Search className="h-4 w-4" />}
             className="bg-muted/50 border-none transition-shadow focus-within:shadow-md"
             value={searchTerm}

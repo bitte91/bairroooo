@@ -1,3 +1,3 @@
-## 2024-05-22 - Input Component Accessibility
-**Learning:** `pointer-events-none` on parent containers of icons in Input components prevents interactivity for functional icons (like password visibility toggles or clear buttons).
-**Action:** Avoid `pointer-events-none` on icon wrappers in shared components unless you are certain the icons are purely decorative.
+## 2024-05-22 - Filter Button State Accessibility
+**Learning:** Using both dynamic text labels (e.g., "Show All") and `aria-pressed` on a toggle button creates a confusing "double negative" or conflicting state for screen readers.
+**Action:** Use a static, descriptive label (e.g., "Filter by Open") and rely on `aria-pressed` to convey the active/inactive state.

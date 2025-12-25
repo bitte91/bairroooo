@@ -57,6 +57,7 @@ export const CommercePage: React.FC = () => {
             size="icon" 
             onClick={() => navigate(-1)} 
             className="-ml-2 transition-transform active:scale-95"
+            aria-label="Voltar"
           >
              <ArrowLeft className="h-6 w-6" />
           </Button>
@@ -83,6 +84,7 @@ export const CommercePage: React.FC = () => {
               showOnlyOpen ? 'text-primary' : 'text-muted-foreground'
              )}
              onClick={() => setShowOnlyOpen((prev) => !prev)}
+             aria-label="Filtrar por abertos"
            >
                <Filter className="h-5 w-5" />
            </Button>

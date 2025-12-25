@@ -51,6 +51,7 @@ export const NewsFeed: React.FC = () => {
                         variant="ghost" 
                         size="icon" 
                         className="shrink-0 transition-transform active:scale-95"
+                        aria-label="Filtrar"
                     >
                         <Filter className="h-5 w-5 text-muted-foreground" />
                     </Button>
@@ -112,6 +113,7 @@ export const NewsFeed: React.FC = () => {
                                         variant="ghost" 
                                         size="icon" 
                                         className="h-8 w-8 -mr-2 transition-transform active:scale-95"
+                                        aria-label="Compartilhar"
                                     >
                                         <Share2 className="h-4 w-4" />
                                     </Button>

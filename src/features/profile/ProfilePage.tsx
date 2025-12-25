@@ -12,11 +12,11 @@ export const ProfilePage: React.FC = () => {
         <div className="pb-24 bg-muted/20 min-h-screen">
              {/* Header */}
              <div className="bg-background px-4 py-3 flex justify-between items-center shadow-sm">
-                <Button variant="ghost" size="icon" onClick={() => navigate(-1)} className="-ml-2">
+                <Button variant="ghost" size="icon" onClick={() => navigate(-1)} className="-ml-2" aria-label="Voltar">
                     <ArrowLeft className="h-6 w-6" />
                 </Button>
                 <h1 className="text-lg font-bold">Perfil do Usuário</h1>
-                <Button variant="ghost" size="icon" className="-mr-2">
+                <Button variant="ghost" size="icon" className="-mr-2" aria-label="Configurações">
                     <Settings className="h-6 w-6 text-muted-foreground" />
                 </Button>
              </div>

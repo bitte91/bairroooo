@@ -40,7 +40,7 @@ export const ServiceList: React.FC = () => {
                             onChange={(e) => setSearchTerm(e.target.value)}
                         />
                     </div>
-                    <Button variant="outline" size="icon">
+                    <Button variant="outline" size="icon" aria-label="Filtrar">
                         <Filter className="w-4 h-4" />
                     </Button>
                 </div>

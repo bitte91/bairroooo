@@ -57,6 +57,7 @@ export const CommercePage: React.FC = () => {
             size="icon" 
             onClick={() => navigate(-1)} 
             className="-ml-2 transition-transform active:scale-95"
+            aria-label="Voltar"
           >
              <ArrowLeft className="h-6 w-6" />
           </Button>
@@ -69,6 +70,7 @@ export const CommercePage: React.FC = () => {
         <div className="flex gap-2 mb-3">
           <Input
             placeholder="Buscar lojas, produtos..."
+            aria-label="Buscar lojas e produtos"
             helperText="Dica: Tente buscar por 'Pizza', 'Farmácia' ou 'Mercado'"
             leftIcon={<Search className="h-4 w-4" />}
             className="bg-muted/50 border-none transition-shadow focus-within:shadow-md"
@@ -83,16 +85,27 @@ export const CommercePage: React.FC = () => {
               showOnlyOpen ? 'text-primary' : 'text-muted-foreground'
              )}
              onClick={() => setShowOnlyOpen((prev) => !prev)}
+             aria-label={showOnlyOpen ? "Mostrar todas as lojas" : "Filtrar apenas lojas abertas"}
+             title={showOnlyOpen ? "Mostrar todas as lojas" : "Filtrar apenas lojas abertas"}
            >
                <Filter className="h-5 w-5" />
            </Button>
         </div>
 
-        <div className="flex gap-2 overflow-x-auto pb-1 no-scrollbar -mx-4 px-4">
+        <div className="flex gap-2 overflow-x-auto pb-1 no-scrollbar -mx-4 px-4" role="tablist" aria-label="Categorias de comércio">
             <Badge
                 variant={selectedCategory === null ? 'active' : 'secondary'}
                 className="whitespace-nowrap cursor-pointer transition-all active:scale-95"
                 onClick={() => setSelectedCategory(null)}
+                role="tab"
+                aria-selected={selectedCategory === null}
+                tabIndex={0}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    setSelectedCategory(null);
+                  }
+                }}
             >
                 Todos
             </Badge>
@@ -102,6 +115,15 @@ export const CommercePage: React.FC = () => {
                     variant={selectedCategory === cat ? 'active' : 'secondary'}
                     className="whitespace-nowrap cursor-pointer capitalize transition-all active:scale-95"
                     onClick={() => setSelectedCategory(cat)}
+                    role="tab"
+                    aria-selected={selectedCategory === cat}
+                    tabIndex={0}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter' || e.key === ' ') {
+                        e.preventDefault();
+                        setSelectedCategory(cat);
+                      }
+                    }}
                 >
                     {cat}
                 </Badge>

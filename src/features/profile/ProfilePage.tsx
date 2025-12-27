@@ -12,11 +12,11 @@ export const ProfilePage: React.FC = () => {
         <div className="pb-24 bg-muted/20 min-h-screen">
              {/* Header */}
              <div className="bg-background px-4 py-3 flex justify-between items-center shadow-sm">
-                <Button variant="ghost" size="icon" onClick={() => navigate(-1)} className="-ml-2">
+                <Button variant="ghost" size="icon" onClick={() => navigate(-1)} className="-ml-2" aria-label="Voltar">
                     <ArrowLeft className="h-6 w-6" />
                 </Button>
                 <h1 className="text-lg font-bold">Perfil do Usuário</h1>
-                <Button variant="ghost" size="icon" className="-mr-2">
+                <Button variant="ghost" size="icon" className="-mr-2" aria-label="Configurações">
                     <Settings className="h-6 w-6 text-muted-foreground" />
                 </Button>
              </div>
@@ -67,12 +67,15 @@ export const ProfilePage: React.FC = () => {
                         { label: "Privacidade e Segurança", icon: null },
                         { label: "Notificações", icon: null },
                     ].map((item, i) => (
-                        <div key={item.label} className="flex items-center justify-between p-4 border-b border-muted active:bg-muted/50 cursor-pointer">
+                        <button
+                            key={item.label}
+                            className="w-full flex items-center justify-between p-4 border-b border-muted hover:bg-muted/20 active:bg-muted/50 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-primary text-left"
+                        >
                             <span className="text-sm font-medium">{item.label}</span>
                             <ChevronRight className="h-5 w-5 text-muted-foreground" />
-                        </div>
+                        </button>
                     ))}
-                    <div className="flex items-center justify-between p-4 active:bg-muted/50 cursor-pointer">
+                    <div className="flex items-center justify-between p-4 active:bg-muted/50">
                          <div className="flex items-center gap-2">
                             <span className="text-sm font-medium">Modo Escuro</span>
                          </div>

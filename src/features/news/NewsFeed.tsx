@@ -63,6 +63,7 @@ export const NewsFeed: React.FC = () => {
                             variant={i === selectedCategory ? 'active' : 'secondary'}
                             className="whitespace-nowrap cursor-pointer transition-all active:scale-95"
                             onClick={() => setSelectedCategory(i)}
+                            aria-pressed={i === selectedCategory}
                         >
                             {cat}
                         </Badge>

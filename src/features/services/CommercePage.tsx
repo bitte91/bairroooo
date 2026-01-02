@@ -93,6 +93,7 @@ export const CommercePage: React.FC = () => {
                 variant={selectedCategory === null ? 'active' : 'secondary'}
                 className="whitespace-nowrap cursor-pointer transition-all active:scale-95"
                 onClick={() => setSelectedCategory(null)}
+                aria-pressed={selectedCategory === null}
             >
                 Todos
             </Badge>
@@ -102,6 +103,7 @@ export const CommercePage: React.FC = () => {
                     variant={selectedCategory === cat ? 'active' : 'secondary'}
                     className="whitespace-nowrap cursor-pointer capitalize transition-all active:scale-95"
                     onClick={() => setSelectedCategory(cat)}
+                    aria-pressed={selectedCategory === cat}
                 >
                     {cat}
                 </Badge>

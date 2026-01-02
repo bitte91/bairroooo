@@ -54,6 +54,7 @@ export const ServicesPage: React.FC = () => {
                 variant={selectedType === null ? 'active' : 'secondary'}
                 className="whitespace-nowrap cursor-pointer"
                 onClick={() => setSelectedType(null)}
+                aria-pressed={selectedType === null}
             >
                 Todos
             </Badge>
@@ -63,6 +64,7 @@ export const ServicesPage: React.FC = () => {
                     variant={selectedType === type ? 'active' : 'secondary'}
                     className="whitespace-nowrap cursor-pointer capitalize"
                     onClick={() => setSelectedType(type)}
+                    aria-pressed={selectedType === type}
                 >
                     {type}
                 </Badge>

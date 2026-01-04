@@ -42,6 +42,7 @@ export const NewsFeed: React.FC = () => {
                 <div className="flex gap-2 mb-3">
                     <Input
                         placeholder="Buscar notícias..."
+                        aria-label="Buscar notícias"
                         leftIcon={<Search className="h-4 w-4" />}
                         className="bg-muted/50 border-none transition-shadow focus-within:shadow-md"
                         value={searchTerm}
@@ -51,6 +52,7 @@ export const NewsFeed: React.FC = () => {
                         variant="ghost" 
                         size="icon" 
                         className="shrink-0 transition-transform active:scale-95"
+                        aria-label="Filtrar notícias"
                     >
                         <Filter className="h-5 w-5 text-muted-foreground" />
                     </Button>
@@ -112,6 +114,7 @@ export const NewsFeed: React.FC = () => {
                                         variant="ghost" 
                                         size="icon" 
                                         className="h-8 w-8 -mr-2 transition-transform active:scale-95"
+                                        aria-label="Compartilhar notícia"
                                     >
                                         <Share2 className="h-4 w-4" />
                                     </Button>

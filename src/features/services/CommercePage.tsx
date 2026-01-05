@@ -57,6 +57,7 @@ export const CommercePage: React.FC = () => {
             size="icon" 
             onClick={() => navigate(-1)} 
             className="-ml-2 transition-transform active:scale-95"
+            aria-label="Voltar"
           >
              <ArrowLeft className="h-6 w-6" />
           </Button>
@@ -69,6 +70,7 @@ export const CommercePage: React.FC = () => {
         <div className="flex gap-2 mb-3">
           <Input
             placeholder="Buscar lojas, produtos..."
+            aria-label="Buscar lojas e produtos"
             helperText="Dica: Tente buscar por 'Pizza', 'Farmácia' ou 'Mercado'"
             leftIcon={<Search className="h-4 w-4" />}
             className="bg-muted/50 border-none transition-shadow focus-within:shadow-md"
@@ -78,6 +80,7 @@ export const CommercePage: React.FC = () => {
            <Button
              variant="ghost"
              size="icon"
+             aria-label="Filtrar lojas abertas"
              className={cn(
               "shrink-0 transition-transform active:scale-95",
               showOnlyOpen ? 'text-primary' : 'text-muted-foreground'

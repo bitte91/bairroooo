@@ -63,11 +63,13 @@ export const OnboardingPage: React.FC = () => {
               <h2 className="text-2xl font-serif font-bold text-foreground mb-2">O que te interessa?</h2>
               <p className="text-muted-foreground mb-6">Personalize seu feed com o que é importante para você.</p>
 
-              <div className="grid grid-cols-2 gap-3">
+              <div className="grid grid-cols-2 gap-3" role="group" aria-label="Selecione seus interesses">
                 {INTERESTS.map(interest => (
-                  <button
+                  <motion.button
                     key={interest}
                     onClick={() => toggleInterest(interest)}
+                    whileTap={{ scale: 0.95 }}
+                    aria-pressed={selectedInterests.includes(interest)}
                     className={cn(
                       "p-3 rounded-xl border text-left transition-all relative overflow-hidden",
                       selectedInterests.includes(interest)
@@ -77,11 +79,11 @@ export const OnboardingPage: React.FC = () => {
                   >
                     {interest}
                     {selectedInterests.includes(interest) && (
-                      <div className="absolute top-2 right-2">
+                      <div className="absolute top-2 right-2" aria-hidden="true">
                         <Check size={16} />
                       </div>
                     )}
-                  </button>
+                  </motion.button>
                 ))}
               </div>
             </motion.div>

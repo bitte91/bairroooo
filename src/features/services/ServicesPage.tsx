@@ -27,7 +27,7 @@ export const ServicesPage: React.FC = () => {
       {/* Header */}
       <div className="sticky top-0 bg-background z-10 px-4 py-3 border-b border-border shadow-sm">
         <div className="flex items-center gap-3 mb-4">
-          <Button variant="ghost" size="icon" onClick={() => navigate(-1)} className="-ml-2">
+          <Button variant="ghost" size="icon" onClick={() => navigate(-1)} className="-ml-2" aria-label="Voltar">
              <ArrowLeft className="h-6 w-6" />
           </Button>
           <div>
@@ -39,21 +39,31 @@ export const ServicesPage: React.FC = () => {
         <div className="flex gap-2 mb-3">
           <Input
             placeholder="Buscar eletricista, aulas..."
+            aria-label="Buscar serviços"
             leftIcon={<Search className="h-4 w-4" />}
             className="bg-muted/50 border-none"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
           />
-           <Button variant="ghost" size="icon" className="shrink-0">
+           <Button variant="ghost" size="icon" className="shrink-0" aria-label="Filtrar">
                <Filter className="h-5 w-5 text-muted-foreground" />
            </Button>
         </div>
 
-        <div className="flex gap-2 overflow-x-auto pb-1 no-scrollbar -mx-4 px-4">
+        <div className="flex gap-2 overflow-x-auto pb-1 no-scrollbar -mx-4 px-4" role="tablist" aria-label="Categorias de serviços">
             <Badge
                 variant={selectedType === null ? 'active' : 'secondary'}
                 className="whitespace-nowrap cursor-pointer"
                 onClick={() => setSelectedType(null)}
+                role="tab"
+                aria-selected={selectedType === null}
+                tabIndex={0}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    setSelectedType(null);
+                  }
+                }}
             >
                 Todos
             </Badge>
@@ -63,6 +73,15 @@ export const ServicesPage: React.FC = () => {
                     variant={selectedType === type ? 'active' : 'secondary'}
                     className="whitespace-nowrap cursor-pointer capitalize"
                     onClick={() => setSelectedType(type)}
+                    role="tab"
+                    aria-selected={selectedType === type}
+                    tabIndex={0}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter' || e.key === ' ') {
+                        e.preventDefault();
+                        setSelectedType(type);
+                      }
+                    }}
                 >
                     {type}
                 </Badge>

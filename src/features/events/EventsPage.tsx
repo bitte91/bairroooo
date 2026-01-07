@@ -26,6 +26,7 @@ export const EventsPage: React.FC = () => {
                         variant="ghost" 
                         size="icon" 
                         className="-ml-2 transition-transform active:scale-95"
+                        aria-label="Menu"
                     >
                          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
                     </Button>
@@ -34,6 +35,7 @@ export const EventsPage: React.FC = () => {
                         variant="ghost" 
                         size="icon" 
                         className="-mr-2 transition-transform active:scale-95"
+                        aria-label="Filtrar"
                     >
                         <Filter className="h-5 w-5 text-primary" />
                     </Button>
@@ -125,6 +127,7 @@ export const EventsPage: React.FC = () => {
                                                     variant="ghost" 
                                                     size="icon" 
                                                     className="h-8 w-8 text-muted-foreground hover:text-primary transition-all active:scale-90"
+                                                    aria-label="Compartilhar"
                                                 >
                                                     <Share2 className="h-4 w-4" />
                                                 </Button>
@@ -132,6 +135,7 @@ export const EventsPage: React.FC = () => {
                                                     variant="ghost" 
                                                     size="icon" 
                                                     className="h-8 w-8 text-muted-foreground hover:text-primary transition-all active:scale-90"
+                                                    aria-label="Adicionar ao calendário"
                                                 >
                                                     <CalendarIcon className="h-4 w-4" />
                                                 </Button>
@@ -148,6 +152,7 @@ export const EventsPage: React.FC = () => {
             {/* FAB */}
             <Button
                 className="fixed bottom-20 right-4 h-14 w-14 rounded-full shadow-lg bg-blue-600 hover:bg-blue-700 text-white p-0 z-40 transition-all hover:scale-110 active:scale-95"
+                aria-label="Criar Evento"
             >
                 <Plus className="h-6 w-6" />
             </Button>

@@ -67,9 +67,11 @@ export const OnboardingPage: React.FC = () => {
                 {INTERESTS.map(interest => (
                   <button
                     key={interest}
+                    type="button"
+                    aria-pressed={selectedInterests.includes(interest)}
                     onClick={() => toggleInterest(interest)}
                     className={cn(
-                      "p-3 rounded-xl border text-left transition-all relative overflow-hidden",
+                      "p-3 rounded-xl border text-left transition-all relative overflow-hidden active:scale-95",
                       selectedInterests.includes(interest)
                         ? "border-primary bg-primary/5 text-primary font-medium shadow-sm"
                         : "border-border bg-card text-muted-foreground hover:border-primary/50"
@@ -77,7 +79,7 @@ export const OnboardingPage: React.FC = () => {
                   >
                     {interest}
                     {selectedInterests.includes(interest) && (
-                      <div className="absolute top-2 right-2">
+                      <div className="absolute top-2 right-2" aria-hidden="true">
                         <Check size={16} />
                       </div>
                     )}
@@ -108,7 +110,14 @@ export const OnboardingPage: React.FC = () => {
       </div>
 
       <div className="w-full max-w-sm mx-auto mt-8">
-        <div className="flex gap-2 mb-4 justify-center">
+        <div
+          className="flex gap-2 mb-4 justify-center"
+          role="progressbar"
+          aria-valuenow={step + 1}
+          aria-valuemin={1}
+          aria-valuemax={3}
+          aria-label="Progresso do cadastro"
+        >
           {[0, 1, 2].map(i => (
             <div
               key={i}

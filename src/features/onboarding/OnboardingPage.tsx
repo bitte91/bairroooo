@@ -68,6 +68,7 @@ export const OnboardingPage: React.FC = () => {
                   <button
                     key={interest}
                     onClick={() => toggleInterest(interest)}
+                    aria-pressed={selectedInterests.includes(interest)}
                     className={cn(
                       "p-3 rounded-xl border text-left transition-all relative overflow-hidden",
                       selectedInterests.includes(interest)
@@ -108,7 +109,14 @@ export const OnboardingPage: React.FC = () => {
       </div>
 
       <div className="w-full max-w-sm mx-auto mt-8">
-        <div className="flex gap-2 mb-4 justify-center">
+        <div
+          className="flex gap-2 mb-4 justify-center"
+          role="progressbar"
+          aria-valuenow={step + 1}
+          aria-valuemin={1}
+          aria-valuemax={3}
+          aria-label="Progresso do onboarding"
+        >
           {[0, 1, 2].map(i => (
             <div
               key={i}

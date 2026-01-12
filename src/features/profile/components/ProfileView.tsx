@@ -48,7 +48,7 @@ export const ProfileView: React.FC = () => {
             {/* Header */}
             <div className="bg-white dark:bg-slate-800 rounded-xl p-6 shadow-sm border border-slate-100 dark:border-slate-700 flex flex-col items-center relative">
                 <div className="absolute top-4 right-4">
-                     <Button variant="ghost" size="icon" onClick={() => {}}>
+                     <Button variant="ghost" size="icon" onClick={() => {}} aria-label="Configurações">
                         <Settings className="w-5 h-5 text-slate-400" />
                      </Button>
                 </div>

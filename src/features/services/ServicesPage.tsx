@@ -27,7 +27,13 @@ export const ServicesPage: React.FC = () => {
       {/* Header */}
       <div className="sticky top-0 bg-background z-10 px-4 py-3 border-b border-border shadow-sm">
         <div className="flex items-center gap-3 mb-4">
-          <Button variant="ghost" size="icon" onClick={() => navigate(-1)} className="-ml-2">
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={() => navigate(-1)}
+            className="-ml-2"
+            aria-label="Voltar"
+          >
              <ArrowLeft className="h-6 w-6" />
           </Button>
           <div>
@@ -44,7 +50,12 @@ export const ServicesPage: React.FC = () => {
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
           />
-           <Button variant="ghost" size="icon" className="shrink-0">
+           <Button
+             variant="ghost"
+             size="icon"
+             className="shrink-0"
+             aria-label="Filtrar"
+           >
                <Filter className="h-5 w-5 text-muted-foreground" />
            </Button>
         </div>

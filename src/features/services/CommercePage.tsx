@@ -56,7 +56,8 @@ export const CommercePage: React.FC = () => {
             variant="ghost" 
             size="icon" 
             onClick={() => navigate(-1)} 
-            className="-ml-2 transition-transform active:scale-95"
+            className="-ml-2"
+            aria-label="Voltar"
           >
              <ArrowLeft className="h-6 w-6" />
           </Button>
@@ -79,10 +80,11 @@ export const CommercePage: React.FC = () => {
              variant="ghost"
              size="icon"
              className={cn(
-              "shrink-0 transition-transform active:scale-95",
+              "shrink-0",
               showOnlyOpen ? 'text-primary' : 'text-muted-foreground'
              )}
              onClick={() => setShowOnlyOpen((prev) => !prev)}
+             aria-label="Filtrar por abertos"
            >
                <Filter className="h-5 w-5" />
            </Button>
@@ -301,13 +303,13 @@ export const CommercePage: React.FC = () => {
                   <div className="flex gap-2">
                     <Button
                       variant="outline"
-                      className="flex-1 h-10 text-sm transition-all active:scale-95"
+                      className="flex-1 h-10 text-sm"
                     >
                       Ver Detalhes
                     </Button>
                     {business.whatsapp && (
                       <Button
-                        className="flex-1 bg-green-600 hover:bg-green-700 text-white h-10 text-sm transition-all active:scale-95"
+                        className="flex-1 bg-green-600 hover:bg-green-700 text-white h-10 text-sm"
                         onClick={(e) => {
                           e.stopPropagation();
                           window.open(`https://wa.me/${business.whatsapp}`, '_blank');

@@ -7,7 +7,7 @@ interface BadgeProps extends React.HTMLAttributes<HTMLDivElement> {
 }
 
 export const Badge = React.forwardRef<HTMLDivElement, BadgeProps>(
-    ({ className, variant = 'secondary', size = 'md', ...props }, ref) => {
+    ({ className, variant = 'secondary', size = 'md', onClick, onKeyDown, ...props }, ref) => {
         const variants = {
             primary: 'bg-primary text-primary-foreground',
             secondary: 'bg-secondary/10 text-secondary-foreground hover:bg-secondary/20',
@@ -21,6 +21,16 @@ export const Badge = React.forwardRef<HTMLDivElement, BadgeProps>(
             md: 'px-3 py-1 text-sm',
         };
 
+        const isInteractive = !!onClick;
+
+        const handleKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
+            if (isInteractive && (e.key === 'Enter' || e.key === ' ')) {
+                e.preventDefault();
+                onClick?.(e as any);
+            }
+            onKeyDown?.(e);
+        };
+
         return (
             <div
                 ref={ref}
@@ -28,8 +38,13 @@ export const Badge = React.forwardRef<HTMLDivElement, BadgeProps>(
                     'inline-flex items-center rounded-full font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2',
                     variants[variant],
                     sizes[size],
+                    isInteractive && 'cursor-pointer hover:opacity-80',
                     className
                 )}
+                role={isInteractive ? 'button' : undefined}
+                tabIndex={isInteractive ? 0 : undefined}
+                onClick={onClick}
+                onKeyDown={handleKeyDown}
                 {...props}
             />
         );

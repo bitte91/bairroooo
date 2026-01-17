@@ -21,16 +21,30 @@ export const Badge = React.forwardRef<HTMLDivElement, BadgeProps>(
             md: 'px-3 py-1 text-sm',
         };
 
+        const isInteractive = !!props.onClick;
+
+        const handleKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
+            if (isInteractive && (e.key === 'Enter' || e.key === ' ')) {
+                e.preventDefault();
+                props.onClick?.(e as any);
+            }
+            props.onKeyDown?.(e);
+        };
+
         return (
             <div
                 ref={ref}
+                {...props}
                 className={cn(
                     'inline-flex items-center rounded-full font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2',
                     variants[variant],
                     sizes[size],
+                    isInteractive && "cursor-pointer",
                     className
                 )}
-                {...props}
+                role={isInteractive ? "button" : undefined}
+                tabIndex={isInteractive ? 0 : undefined}
+                onKeyDown={handleKeyDown}
             />
         );
     }
